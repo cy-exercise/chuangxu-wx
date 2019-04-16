@@ -6,17 +6,21 @@
         <div class="item-title border-bottom">选择您想代理的产品</div>
         <div class="item-box">
           <div class="item">
-            <div class="item-check">
-              <input type="checkbox">
-            </div>
-            <div class="item-content border-bottom">
-              <div class="item-text">创序护考代理</div>
-              <div class="item-logo"></div>
-            </div>
+            <label style="height: 100%;width: 100%;">
+              <div class="item-check">
+                <span class="checkbox__inner"></span>
+                <input type="checkbox" class="checkbox__original" v-model="cc">
+              </div>
+              <div class="item-content border-bottom">
+                <div class="item-text">创序护考代理</div>
+                <div class="item-logo"></div>
+              </div>
+            </label>
+
           </div>
           <div class="item">
             <div class="item-check">
-              <input type="checkbox">
+              <input type="checkbox" v-model="abc" @click="a">
             </div>
             <div class="item-content border-bottom">
               <div class="item-text">创序护考代理</div>
@@ -35,6 +39,18 @@
     name: "Becomes",
     components: {
       Header
+    },
+    data() {
+      return {
+        abc: false,
+        cc: ''
+      }
+    },
+    methods: {
+      a() {
+        console.log(this.abc)
+        console.log(this.cc)
+      }
     }
   }
 </script>
@@ -98,5 +114,25 @@
     margin-right: .2rem;
     margin-top: .19rem;
     border-radius: .04rem;
+  }
+  .checkbox__inner {
+    display: inline-block;
+    position: relative;
+    border: 1px solid #dcdfe6;
+    border-radius: 2px;
+    box-sizing: border-box;
+    width: 14px;
+    height: 14px;
+    background-color: #fff;
+    z-index: 1;
+    transition: border-color .25s cubic-bezier(.71,-.46,.29,1.46),background-color .25s cubic-bezier(.71,-.46,.29,1.46);
+  }
+  .checkbox__original {
+    opacity: 0;
+    outline: none;
+    position: absolute;
+    margin: 0;
+    width: 0;
+    height: 0;
   }
 </style>
