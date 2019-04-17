@@ -20,6 +20,7 @@ axios.defaults.headers.common['Authorization'] = 'Bearer ' + VueCookies.get('acc
 
 Vue.prototype.$ajax= axios
 Vue.use(MintUI)
+
 Vue.use(VueCookies)
 
 /* eslint-disable no-new */
