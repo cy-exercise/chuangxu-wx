@@ -1,16 +1,9 @@
 <template>
-    <!--<div class="header" :class="{is_white: is_white}">-->
-      <!--&lt;!&ndash;<mt-header fixed :title="title">&ndash;&gt;-->
-        <!--&lt;!&ndash;<router-link :to="to" slot="left">&ndash;&gt;-->
-          <!--&lt;!&ndash;<mt-button icon="back"></mt-button>&ndash;&gt;-->
-        <!--&lt;!&ndash;</router-link>&ndash;&gt;-->
-      <!--&lt;!&ndash;</mt-header>&ndash;&gt;-->
-      <!--<i class="cubeic-back"></i>-->
-    <!--</div>-->
-  <div class="cube-item border-bottom-1px" >
-    <router-link class="link" to="component.path"><i
-      class="cubeic-arrow"></i>
-    </router-link>
+  <div class="header-wrapper">
+    <header class="header">
+      <h1>{{title}}</h1>
+      <i @click="back" class="cubeic-back"></i>
+    </header>
   </div>
 </template>
 
@@ -29,38 +22,38 @@
       }
     },
     methods: {
-
+      back() {
+        this.$router.back()
+      }
     }
   }
 </script>
 
-<style scoped>
-  .header {
-    display: flex;
-    height: .8rem;
-    padding-left: .39rem;
-  }
-  .is_white .mint-header {
-    background: #ffffff;
-  }
-  .mint-header {
-    background: #F8F8F8;
-    color: #515151;
-    font-size: .36rem;
-  }
-
-  >>> .mintui {
-    font-size: .4rem;
-  }
-  .icon-return {
-    display: inline-block;
-    /*background: url("/static/images/return_normal.png");*/
-    color: rebeccapurple;
-    height: .36rem;
-    width: .21rem;
-    /*background-size: 100% 100%;*/
-  }
-  .cubeic-back {
-    font-size: .28rem;
-  }
+<style lang="stylus" scoped>
+  .header-wrapper
+    height .8rem
+  .header
+    position: fixed
+    top 0
+    left 0
+    height .8rem
+    width 100%
+    line-height: .8rem
+    text-align: center
+    background-color: #F8F8F8
+    /*box-shadow: 0 1px 6px #ccc*/
+    -webkit-backface-visibility: hidden
+    backface-visibility: hidden
+    z-index: 5
+    h1
+      font-size .36rem
+      font-weight 500
+      color #515151
+    .cubeic-back
+      position: absolute
+      top: 0
+      left: 0
+      padding: 0 15px
+      font-size .5rem
+      color: #515151
 </style>

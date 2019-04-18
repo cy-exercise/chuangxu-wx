@@ -8,8 +8,10 @@
           <div class="item">
             <label class="">
               <div class="item-check">
-                <span class="checkbox__inner is-checked"></span>
-                <!--<input type="checkbox" class="checkbox__original" v-model="cc">-->
+                <span class="checkbox__input" :class="{'is-checked': abc}">
+                  <span class="checkbox__inner"></span>
+                  <input type="checkbox" class="checkbox__original" @click="handleCheck" v-model="abc" value="a">
+                </span>
               </div>
               <div class="item-content border-bottom">
                 <div class="item-text">创序护考代理</div>
@@ -20,8 +22,10 @@
           <div class="item">
             <label class="">
               <div class="item-check">
-                <span class="checkbox__inner is-checked"></span>
-                <!--<input type="checkbox" class="checkbox__original" v-model="cc">-->
+                 <span class="checkbox__input">
+                  <span class="checkbox__inner"></span>
+                  <input type="checkbox" class="checkbox__original" value="复选框 B">
+                </span>
               </div>
               <div class="item-content border-bottom">
                 <div class="item-text">创序护考代理</div>
@@ -49,9 +53,9 @@
       }
     },
     methods: {
-      a() {
+      handleCheck() {
+        // alert(1)
         console.log(this.abc)
-        console.log(this.cc)
       }
     }
   }
@@ -92,6 +96,9 @@
     height: .96rem;
     line-height: .96rem;
     margin-left: .2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .item-check input {
     background: #ffffff;
@@ -124,8 +131,8 @@
     border: 1px solid #dcdfe6;
     border-radius: 2px;
     box-sizing: border-box;
-    width: 14px;
-    height: 14px;
+    width: .32rem;
+    height: .32rem;
     background-color: #fff;
     z-index: 1;
     transition: border-color .25s cubic-bezier(.71,-.46,.29,1.46),background-color .25s cubic-bezier(.71,-.46,.29,1.46);
@@ -142,14 +149,14 @@
     /*background-color: #409eff;*/
     border-color: #409eff;
   }
-  .el-checkbox__inner:after {
+  .checkbox__inner:after {
     box-sizing: content-box;
     content: "";
     border: 1px solid #fff;
     border-left: 0;
     border-top: 0;
-    height: 7px;
-    left: 4px;
+    height: 8px;
+    left: 5px;
     position: absolute;
     top: 1px;
     transform: rotate(45deg) scaleY(0);
@@ -158,45 +165,25 @@
     transform-origin: center;
   }
 
-  .el-checkbox__input.is-checked .el-checkbox__inner {
+  .checkbox__input.is-checked .checkbox__inner {
     background-color: #409eff;
     border-color: #409eff;
   }
 
-  .el-checkbox__input {
+  .checkbox__input {
     white-space: nowrap;
     cursor: pointer;
     outline: none;
-    display: inline-block;
+    /*display: inline-block;*/
     line-height: 1;
     position: relative;
     vertical-align: middle;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .el-checkbox__input.is-checked .el-checkbox__inner:after {
+  .checkbox__input.is-checked .checkbox__inner:after {
     transform: rotate(45deg) scaleY(1);
   }
-  .el-checkbox__inner:after {
-    box-sizing: content-box;
-    content: "";
-    border: 1px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 7px;
-    left: 4px;
-    position: absolute;
-    top: 1px;
-    transform: rotate(45deg) scaleY(0);
-    width: 3px;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) .05s;
-    transform-origin: center;
-  }
-  .el-checkbox__original {
-    opacity: 0;
-    outline: none;
-    position: absolute;
-    margin: 0;
-    width: 0;
-    height: 0;
-    left: -999px;
-  }
+
 </style>

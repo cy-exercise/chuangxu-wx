@@ -31,9 +31,7 @@
       <div class="order-title border-bottom">下单详情</div>
       <ul
         class="order-block"
-        v-infinite-scroll="loadMore"
-        infinite-scroll-disabled="loading"
-        infinite-scroll-distance="10"
+
       >
         <li class="order-item border-bottom" v-for="item in list">
           <span class="user-name">{{item.name}}</span>
@@ -42,10 +40,6 @@
           <span class="order-date">{{item.date}}</span>
         </li>
       </ul>
-      <p v-show="loading" class="page-infinite-loading">
-        <mt-spinner type="fading-circle"></mt-spinner>
-        加载中...
-      </p>
     </div>
   </div>
 </template>
@@ -311,6 +305,7 @@
     width: 1.85rem;
     box-shadow:0px 6px 12px 0px rgba(0,0,0,0.2);
     border-radius: .08rem;
+    font-size: .28rem;
   }
   .switch-block li {
     height: .75rem;
