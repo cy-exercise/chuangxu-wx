@@ -19,15 +19,6 @@
                 <div class="description">一次性转账≤￥20000.00</div>
               </div>
             </li>
-            <router-link to="/agent/add_card">
-              <li class="border-bottom">
-                <img src="/static/images/add.png" alt="">
-                <div class="item">
-                  <div class="item-title">添加银行卡付款</div>
-                  <div class="description">该交易公支持储蓄卡</div>
-                </div>
-              </li>
-            </router-link>
           </ul>
         </div>
       </div>
@@ -132,5 +123,6 @@
   }
   .item-title {
     color: #515151;
+    font-size: .28rem;
   }
 </style>

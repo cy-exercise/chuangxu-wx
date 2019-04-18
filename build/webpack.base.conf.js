@@ -8,7 +8,7 @@ function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
-
+var TransformModulesPlugin = require('webpack-transform-modules-plugin')
 
 module.exports = {
   context: path.resolve(__dirname, '../'),
@@ -27,6 +27,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      'cube-ui': 'cube-ui/lib'
     }
   },
   module: {
@@ -78,5 +79,8 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
-  }
+  },
+  plugins: [
+    new TransformModulesPlugin()
+  ]
 }

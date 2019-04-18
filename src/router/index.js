@@ -15,6 +15,7 @@ import Earnings from '../pages/agent/Earnings'
 import Withdraw from '../pages/agent/Withdraw'
 import WithdrawInfo from '../pages/agent/WithdrawInfo'
 import Bill from '../pages/agent/Bill'
+import Header from '../pages/common/Header'
 
 
 Vue.use(Router)
@@ -25,6 +26,10 @@ export default new Router({
       path: '/apply',
       name: 'apply',
       component: Apply
+    }, {
+      path: '/header',
+      name: 'Header',
+      component: Header
     },
     {
       path: '/bind_phone',

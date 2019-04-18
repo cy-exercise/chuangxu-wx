@@ -82,5 +82,6 @@
     color: #ffffff;
     margin-top: 1.68rem;
     margin-left: .72rem;
+    font-size: .28rem;
   }
 </style>

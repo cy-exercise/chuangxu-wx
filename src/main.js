@@ -11,6 +11,7 @@ import './assets/style/reset.css'
 import './assets/style/border.css'
 import axios from 'axios'
 import VueCookies from 'vue-cookies'
+import {Style, Upload, Toast} from 'cube-ui'
 
 Vue.config.productionTip = false;
 
@@ -20,8 +21,9 @@ axios.defaults.headers.common['Authorization'] = 'Bearer ' + VueCookies.get('acc
 
 Vue.prototype.$ajax= axios
 Vue.use(MintUI)
-
 Vue.use(VueCookies)
+Vue.use(Upload)
+Vue.use(Toast)
 
 /* eslint-disable no-new */
 new Vue({

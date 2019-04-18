@@ -4,21 +4,22 @@
     <Header :title="title" to="/"></Header>
     <div class="container">
       <div class="withdraw-title border-bottom" @click="handleSelect">
-        <div class="wx" v-show="!show_card">
-          <div class="title-left">
-            <div class="title-left-item">
-              <span>提现到</span>
-              <img src="/static/images/logo-wx.png" alt="">
-              <span class="logo-name">微信</span>
-            </div>
+        <div class="withdraw-wx" v-show="!show_card">
+          <span class="input-title">提现到</span>
+          <div class="card-main">
+            <img class="card-icon" src="/static/images/logo-wx.png" alt="">
+            <span>微信</span>
+            <div class="description">一次性转账≤￥5000.00</div>
           </div>
-          <div class="description">一次性转账≤￥5000.00</div>
           <img class="into-icon" src="/static/images/into_normal.png" alt="">
         </div>
-        <div class="card" v-show="show_card">
+        <div class="withdraw-card" v-show="show_card">
           <span class="input-title">提现到</span>
-          <img class="card-icon" src="/static/images/bank_card.png" alt="">
-          <span>银行卡 ({{card.account}})</span>
+          <div class="card-main">
+            <img class="card-icon" src="/static/images/bank_card.png" alt="">
+            <span>银行卡 ({{card.account}})</span>
+            <div class="description">一次性转账≤￥20000.00</div>
+          </div>
           <img class="into-icon" src="/static/images/into_normal.png" alt="">
         </div>
       </div>
@@ -116,15 +117,8 @@
     height: 1.3rem;
     position: relative;
   }
-  .title-left {
-    width: 3.88rem;
-    text-align: left;
-    margin-bottom: .08rem;
-  }
-  .title-left-item {
-    padding-top: .26rem;
-    height: .44rem;
-    line-height: .44rem;
+  .withdraw-wx {
+    display: flex;
   }
   .title-left-item span {
     color: #B5B5B5;
@@ -143,8 +137,8 @@
   }
   .description {
     position: absolute;
-    bottom: .25rem;
-    left: 1.74rem;
+    bottom: .3rem;
+    left: 1.53rem;
     color: #B5B5B5;
     font-size: .2rem;
     font-weight: 400;
@@ -164,7 +158,7 @@
   }
   .input-title {
     text-align: left;
-    margin-top: .15rem;
+    margin-top: .1rem;
     color: #B5B5B5;
     font-weight: 500;
     font-size: .2rem;
@@ -172,13 +166,18 @@
   .imput-wrapper {
     position: absolute;
     bottom: .16rem;
+    display: flex;
+
   }
   .imput-wrapper span {
     font-size: .5rem;
     font-weight: 500;
-    display: inline-block;
     height: .7rem;
+    /*line-height: .7rem;*/
     width: .5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   .imput-wrapper input {
     font-size: .5rem;
@@ -212,20 +211,37 @@
     font-weight: 400;
     font-size: .2rem;
   }
+  .submit-title {
+    font-size: .28rem;
+  }
   .submit-title .all {
     color: #28B2FE;
     font-weight: 400;
     font-size: .2rem;
   }
   .card-icon {
-    height: .25rem;
-    width: .32rem;
+    height: .34rem;
+    width: .44rem;
     display: inline-block;
     margin-left: .4rem;
     margin-right: .1rem;
   }
-  .card {
+  .withdraw-card, .withdraw-wx {
+    display: flex;
+    font-size: .28rem;
     height: 1.3rem;
-    line-height: 1.3rem;
+    padding-top: .31rem;
+    box-sizing: border-box;
+  }
+  .card-main {
+    font-size: .28rem;
+    display: flex;
+  }
+  .card span {
+    /*font-size: .28rem;*/
+  }
+  .withdraw-wx .card-icon {
+    width: .44rem;
+    height: .44rem;
   }
 </style>

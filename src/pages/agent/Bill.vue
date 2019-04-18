@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-      <Header :title="title" to="/agent/earnings" ></Header>
+      <Header :title="title" to="/salary" ></Header>
       <Empty v-show="empty_show" info="暂无零钱提现记录" icon="/static/images/bill_icon.png"></Empty>
 
       <ul class="bill-list" v-show="!empty_show">
@@ -44,7 +44,7 @@
     data() {
       return {
         title: '账单',
-        empty_show: false
+        empty_show: true
       }
     },
     methods: {
@@ -73,7 +73,7 @@
   }
   .bill-list li {
     height: 1.2rem;
-    /*line-height: 1.45rem;*/
+    line-height: 1.45rem;
     background: #ffffff;
   }
   .bill-icon {
@@ -82,6 +82,10 @@
     height: 1.2rem;
     line-height: 1.2rem;
     text-align: center;
+    font-size: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .bill-icon img {
@@ -133,5 +137,6 @@
     font-size: .28rem;
     font-weight: 500;
     color: #515151;
+    float: left;
   }
 </style>

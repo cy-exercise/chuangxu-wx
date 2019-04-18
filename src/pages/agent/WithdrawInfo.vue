@@ -103,6 +103,7 @@
     border-radius: .1rem;
     border: .02rem solid #28B2FE;
     text-align: center;
+    font-size: .28rem;
   }
   .total-money {
     height: .88rem;
