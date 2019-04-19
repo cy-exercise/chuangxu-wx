@@ -52,15 +52,9 @@ export default new Router({
       component: ApplyComplete
     },
     {
-      path: '/agent',
+      path: '/agent_info',
       name: 'Agent',
-      component: Agent,
-      children: [
-        {
-          path: ':type/agent_info',
-          component: AgentInfo
-        }
-      ]
+      component: Agent
     },
     {
       path: '/order',

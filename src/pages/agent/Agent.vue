@@ -2,14 +2,14 @@
   <div class="agent">
     <Header title="我的代理" to="/agent"></Header>
     <div class="head-nav border-bottom">
-      <router-link to="/agent/1/agent_info">
+      <router-link to="/agent_info?type=nurse">
         <div class="nav-item" :class="{is_selected: 'nurse'=== type}" @click="handleSwitch('nurse')">
           <span class="item-content ">创序护考
             <span class="bottom-line"></span>
           </span>
         </div>
       </router-link>
-      <router-link to="/agent/2/agent_info">
+      <router-link to="/agent_info?type=medical">
         <div class="nav-item" :class="{is_selected: 'medical'=== type}" @click="handleSwitch('medical')">
 
           <span class="item-content ">创序医考
@@ -17,7 +17,7 @@
           </span>
         </div>
       </router-link>
-      <router-link to="/agent/3/agent_info">
+      <router-link to="/agent_info?type=bao">
         <div class="nav-item" :class="{is_selected: 'bao'=== type}" @click="handleSwitch('bao')">
 
           <span class="item-content ">创序医考宝
@@ -26,16 +26,18 @@
         </div>
       </router-link>
     </div>
-    <router-view></router-view>
+    <AgentInfo></AgentInfo>
   </div>
 </template>
 
 <script>
   import Header from '../common/Header'
+  import AgentInfo from '../agent/AgentInfo'
   export default {
     name: "Agent",
     components: {
-      Header
+      Header,
+      AgentInfo
     },
     data() {
       return {

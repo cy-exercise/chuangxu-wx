@@ -1,24 +1,24 @@
 <template>
   <div class="register">
-    <Header title="填写基本信息" to="/user"></Header>
+    <Header title="填写基本信息" to="/becomes"></Header>
     <div class="info-wrapper">
       <div class="base-info">
         <div class="base-title">申请代理的账号（手机号码）</div>
         <div class="base-input">
-          <div class="input-name">姓 名</div>
-          <input type="text" placeholder="请输入真实姓名">
+          <div class="input-name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</div>
+          <input type="text" placeholder="请输入真实姓名" v-model="name">
         </div>
         <div class="base-input">
-          <div class="input-name">地 址</div>
-          <input type="text" placeholder="请输入您的详细地址">
+          <div class="input-name">地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 址</div>
+          <input type="text" placeholder="请输入您的详细地址" v-model="address">
         </div>
         <div class="base-input">
           <div class="input-name">身份证号</div>
-          <input type="text" placeholder="请输入您的身份证号码">
+          <input type="text" placeholder="请输入您的身份证号码" v-model="id_card">
         </div>
         <div class="base-input">
-          <div class="input-name bank-card-title">选择银行卡</div>
-          <input type="text" placeholder="请选择银行卡并填写银行卡号">
+          <div class="input-name bank-card-title" @click="showPicker">{{bank_name}}</div>
+          <input type="text" placeholder="请选择银行卡并填写银行卡号" v-model="bank_card">
         </div>
       </div>
       <div style="height: .2rem;"></div>
@@ -28,9 +28,12 @@
           <cube-upload
             ref="uploadFront"
             v-model="files"
+            :auto="auto"
             :action="action"
             @files-added="addedHandler('front')"
-            @file-error="errHandler">
+            @file-error="errHandler"
+            @file-submitted="submittedHandler"
+          >
             <div class="clear-fix">
               <cube-upload-file v-for="(file, i) in files" :file="file" :key="i"></cube-upload-file>
               <cube-upload-btn :multiple="false">
@@ -83,22 +86,48 @@
         </div>
       </div>
       <div style="height: .4rem;"></div>
-      <div class="button">提交</div>
+      <div class="button" @click="handleSubmit" :class="{can_submit:  name}">提交</div>
       <div style="height: .4rem;"></div>
     </div>
   </div>
 </template>
 
 <script>
+  import OSS from 'ali-oss'
+  const qs = require('qs');
   import Header from '../common/Header'
   export default {
     name: "Register",
     data() {
       return {
-        action: '//jsonplaceholder.typicode.com/photos/',
+        action: {
+          target: this.$ajax.defaults.baseURL + `/api/v1/config/sts/token`,
+          headers: {
+            Authorization: 'Bearer ' + this.$cookies.get('access_token')
+          },
+          checkSuccess: 'checkSuccess'
+        },
         files: [],
         files_back: [],
-        files_hand: []
+        files_hand: [],
+        auto: false,
+        name: '',
+        phone: '',
+        address: '',
+        id_card: '',
+        bank: '',
+        bank_name: '选择银行卡',
+        bank_card: '',
+        id_url1: '',
+        id_url2: '',
+        face_url: '',
+        user: '',
+        brand_id: '',
+        column1: [
+          { text: '工商银行', value: '1002'},
+          { text: '农业银行', value: '1005' },
+          { text: '中国银行', value: '1026' }
+          ]
       }
     },
     components: {
@@ -106,16 +135,21 @@
     },
     methods: {
       addedHandler(type) {
+
+        //const sts = this.getStsToken(this.files[0])
+        let file;
         if (type === 'front') {
-          const file = this.files[0]
+          file = this.files[0]
           file && this.$refs.uploadFront.removeFile(file)
         } else if (type === 'back') {
-          const file = this.files_back[0]
+          file = this.files_back[0]
           file && this.$refs.uploadBack.removeFile(file)
         } else  {
-          const file = this.files_hand[0]
+          file = this.files_hand[0]
           file && this.$refs.uploadHand.removeFile(file)
         }
+        // console.log(this.files)
+
       },
       errHandler(file) {
         // const msg = file.response.message
@@ -125,9 +159,104 @@
           time: 1000
         }).show()
       },
+      submittedHandler(file, next) {
+
+        this.getStsToken(file)
+      },
+      checkSuccess(res, file) {
+        console.log(res)
+        console.log(file)
+
+      },
       // 上传成功回调
       successHandler(file) {
 
+      },
+      getStsToken(file) {
+        this.$ajax.get('/api/v1/config/sts/token').then(res => {
+          console.log(res.data)
+          let client = new OSS({
+            region: 'oss-cn-shanghai',
+            accessKeyId: res.data.data.access_key_id,
+            accessKeySecret: res.data.data.access_key_secret,
+            bucket: 'chuangxu',
+            stsToken:res.data.data.security_token
+          })
+          console.log(file)
+
+          var timestamp = (new Date()).getTime();
+          let name = 'upload/agent/' + timestamp + '.' + file.file.type.split("/")[1]
+          console.log(name)
+          client.put(name, file.file).then(function (r1) {
+            console.log('put success: %j', r1);
+            return client.get(name);
+          }).then(function (r2) {
+            console.log('get success: %j', r2);
+            // _this.$api.User.editAvatar('0',r2.res.requestUrls[0],'0').then(res=>{
+            //   _this.dataList.avatar.url = r2.res.requestUrls[0]
+            // })
+          }).catch(function (err) {
+            console.error('error: %j', err);
+          });
+        })
+      },
+      handleSubmit() {
+        let data = {
+          name: this.name,
+          phone: this.phone,
+          address: this.address,
+          id_card: this.id_card,
+          bank: this.bank,
+          bank_card: this.bank_card,
+          brand_id: '13245646',
+          id_uri1: '',
+          id_uri2: '',
+          face_uri: ''
+        }
+        this.$ajax.post('api/v1/agent', qs.stringify(data)).then(res => {
+          console.log(res.data)
+          this.showSuccess()
+          this.$router.push('/apply_complete')
+          if (res.data.code === 200) {
+            this.showSuccess()
+          }
+        })
+      },
+      showSuccess() {
+        this.$createDialog({
+          type: 'alert',
+          title: '我是标题',
+          content: '注册成功',
+          icon: 'cubeic-smile'
+        }).show()
+      },
+      showPicker() {
+        if (!this.picker) {
+          this.picker = this.$createPicker({
+            title: '选择银行卡',
+            data: [this.column1],
+            onSelect: this.selectHandle,
+            onCancel: this.cancelHandle
+          })
+        }
+        this.picker.show()
+      },
+      selectHandle(selectedVal, selectedIndex, selectedText) {
+        // this.$createDialog({
+        //   type: 'warn',
+        //   content: `${selectedText}`,
+        //   icon: 'cubeic-alert'
+        // }).show()
+        this.bank_name = selectedText[0]
+        this.bank = selectedVal[0]
+        console.log(selectedText)
+      },
+      cancelHandle() {
+        this.$createToast({
+          type: 'correct',
+          txt: 'Picker canceled',
+          time: 1000
+        }).show()
       }
     }
   }
@@ -164,10 +293,12 @@
     margin-bottom: .2rem;
     font-size: .28rem;
     color: #B5B5B5;
+    display flex
   }
   .base-input input {
     background: #F8F8F8;
-
+    flex 1
+    padding-left .1rem
   }
   .input-name {
     display: inline-block;
@@ -233,6 +364,9 @@
     text-align: center;
     width: 4.96rem;
     font-size: .28rem;
+  }
+  .button.can_submit {
+    background:rgba(68,142,246,1);
   }
   .card-front, .card-back {
     background: #F8F8F8;

@@ -77,6 +77,7 @@
     border-radius: .1rem;
   }
   .code-head {
+    font-size: 0;
     height: .96rem;
     padding-left: .4rem;
     padding-right: .4rem;

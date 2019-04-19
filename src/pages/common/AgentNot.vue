@@ -1,6 +1,6 @@
 <template>
   <div class="agent-not">
-    <img src="/static/images/code.png" alt="" class="icon">
+    <img src="/static/images/agent-icon.png" alt="" class="icon">
     <div class="title">你还不是创序医考的代理</div>
     <div class="button">申请代理</div>
   </div>
@@ -15,6 +15,10 @@
 <style scoped>
   .agent-not {
     text-align: center;
+  }
+  .agent-not img {
+    height: 1.5rem;
+    width: 1.45rem;
   }
   .icon {
     margin-top: 3.18rem;

@@ -8,18 +8,21 @@
           <img class="phone-icon" src="/static/images/phone.png" alt="">
           <span class="phone-prefix">+86</span>
         </div>
-        <input class="phone-input" type="text" placeholder="请输入手机号码">
+        <input class="phone-input" type="text" placeholder="请输入手机号码" v-model="phone">
       </div>
       <div class="code-block">
         <div class="code-block-main">
           <img class="code-icon" src="/static/images/code.png" alt="">
-          <input type="text" placeholder="请输入验证码" class="code-input">
+          <input type="text" placeholder="请输入验证码" class="code-input" v-model="code">
         </div>
-        <div class="code-button">获取验证码</div>
+        <div class="code-button" >
+          <span class="send-code" v-show="show" @click="getCode">获取验证码</span>
+          <span class="send-off" v-show="!show">{{second}} s</span>
+        </div>
       </div>
     </div>
     <div style="height: .4rem"></div>
-    <div class="button">下一步</div>
+    <div class="button" :class="{next: phone && code}" @click="handleNext">下一步</div>
   </div>
 </template>
 
@@ -29,6 +32,72 @@
     name: "BindPhone",
     components: {
       Header
+    },
+    data() {
+      return {
+        phone: '',
+        type: 4,
+        show: true,
+        second: 0,
+        code: '',
+        next_to: '/becomes'
+      }
+    },
+    methods: {
+      getCode() {
+        if (!this.phone) {
+          this.$createDialog({
+            type: 'alert',
+            title: '请输入手机号',
+            icon: 'cubeic-alert'
+          }).show()
+          return false;
+        }
+        let data =  {
+          phone: this.phone,
+          type: this.type
+        };
+        this.setTimeOut();
+        this.$ajax.post('/api/v1/sms', data).then(res => {
+          if (res.data.code === 200) {
+            alert('jkfds')
+          } else {
+            this.$createDialog({
+              type: 'alert',
+              title: res.data.message,
+              icon: 'cubeic-alert'
+            }).show()
+          }
+        })
+          .catch((res, data) => {
+            this.$createDialog({
+              type: 'alert',
+              title: '发送失败',
+              icon: 'cubeic-alert'
+            }).show()
+          })
+      },
+      setTimeOut(){
+        const TIME_COUNT = 60;
+        if (!this.timer) {
+          this.second = TIME_COUNT;
+          this.show = false;
+          this.timer = setInterval(() => {
+            if (this.second > 0 && this.second <= TIME_COUNT) {
+              this.second--;
+            } else {
+              this.show = true;
+              clearInterval(this.timer);
+              this.timer = null;
+            }
+          }, 1000)
+        }
+      },
+      handleNext() {
+        if (this.phone && this.code) {
+          this.$router.push(this.next_to)
+        }
+      }
     }
   }
 </script>
@@ -94,8 +163,11 @@
   .phone-input {
     background: #F8F8F8;
     font-size: .28rem;
-    color: #B5B5B5;
+    /*color: #B5B5B5;*/
     margin-left: .23rem;
+    padding-left: .1rem;
+    box-sizing: border-box;
+    flex: 1;
   }
   .code-block {
     display: flex;
@@ -110,6 +182,7 @@
     align-items: center;
     width: 4.68rem;
     position: relative;
+    padding-right: .2rem;
   }
   .code-block-main:after {
     position: absolute;
@@ -128,10 +201,14 @@
   }
   .code-input {
     background: #F8F8F8;
-    color: #B5B5B5;
+    /*color: #B5B5B5;*/
     font-size: .3rem;
     font-weight: 400;
     height: 100%;
+    padding-left: .1rem;
+    /*margin-right: .4rem;*/
+    flex: 1;
+    /*box-sizing: border-box;*/
   }
   .code-button {
     color: #28B2FE;
@@ -139,6 +216,9 @@
     font-size: .28rem;
     flex: 1;
     text-align: center;
+  }
+  .code-button .send-off {
+    color: #B5B5B5;
   }
   .button {
     background: rgba(68,142,246,0.5);
@@ -150,5 +230,8 @@
     text-align: center;
     width: 4.96rem;
     font-size: .28rem;
+  }
+  .next {
+    background: rgba(68,142,246,1);
   }
 </style>

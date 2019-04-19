@@ -1,6 +1,6 @@
 <template>
   <div class="becomes">
-    <Header title="申请成为代理" to="/user"></Header>
+    <Header title="申请成为代理" to="/bind_phone"></Header>
     <div class="becomes-wrapper">
       <div class="block">
         <div class="item-title border-bottom">选择您想代理的产品</div>
@@ -8,9 +8,25 @@
           <div class="item">
             <label class="">
               <div class="item-check">
-                <span class="checkbox__input" :class="{'is-checked': abc}">
+                <span class="checkbox__input" :class="{'is-checked': nurse}">
                   <span class="checkbox__inner"></span>
-                  <input type="checkbox" class="checkbox__original" @click="handleCheck" v-model="abc" value="a">
+                  <input type="checkbox" class="checkbox__original" @click="handleCheck" v-model="nurse" value="nurse">
+                </span>
+              </div>
+              <div class="item-content border-bottom">
+                <div class="item-text">创序护考代理</div>
+                <div class="item-logo">
+                  <img src="/static/images/logo-nurse.png" alt="">
+                </div>
+              </div>
+            </label>
+          </div>
+          <div class="item">
+            <label class="">
+              <div class="item-check">
+                 <span class="checkbox__input" :class="{'is-checked': medical}">
+                  <span class="checkbox__inner"></span>
+                  <input type="checkbox" class="checkbox__original" v-model="medical" value="medical">
                 </span>
               </div>
               <div class="item-content border-bottom">
@@ -22,20 +38,25 @@
           <div class="item">
             <label class="">
               <div class="item-check">
-                 <span class="checkbox__input">
+                 <span class="checkbox__input" :class="{'is-checked': bao}">
                   <span class="checkbox__inner"></span>
-                  <input type="checkbox" class="checkbox__original" value="复选框 B">
+                  <input type="checkbox" class="checkbox__original" v-model="bao" value="bao">
                 </span>
               </div>
               <div class="item-content border-bottom">
-                <div class="item-text">创序护考代理</div>
-                <div class="item-logo"></div>
+                <div class="item-text">创序医考宝代理</div>
+                <div class="item-logo">
+                  <img src="/static/images/logo-bao.png" alt="">
+                </div>
               </div>
             </label>
           </div>
         </div>
       </div>
+      <div style="height: 1.34rem;"></div>
+      <div class="button" :class="{next: nurse || medical || bao}" @click="handleNext">下一步</div>
     </div>
+
   </div>
 </template>
 
@@ -48,14 +69,24 @@
     },
     data() {
       return {
-        abc: false,
-        cc: ''
+        nurse: false,
+        medical: false,
+        bao: false,
+        next_to: '/register'
       }
     },
     methods: {
       handleCheck() {
-        // alert(1)
-        console.log(this.abc)
+        //alert(1)
+        // console.log(this.abc)
+      },
+      handleNext() {
+        if (this.nurse || this.medical || this.bao) {
+          this.$router.push({
+            path: 'register',
+            query: { nurse: this.nurse, medical: this.medical, bao: this.bao}
+          })
+        }
       }
     }
   }
@@ -124,6 +155,11 @@
     margin-right: .2rem;
     margin-top: .19rem;
     border-radius: .04rem;
+    display: flex;
+  }
+  .item-logo img {
+    height: .6rem;
+    width: .6rem;
   }
   .checkbox__inner {
     display: inline-block;
@@ -184,6 +220,21 @@
   }
   .checkbox__input.is-checked .checkbox__inner:after {
     transform: rotate(45deg) scaleY(1);
+  }
+
+  .button {
+    background: rgba(68,142,246,0.5);
+    border-radius: .08rem;
+    margin: 0 auto;
+    color: #ffffff;
+    height: .76rem;
+    line-height: .76rem;
+    text-align: center;
+    width: 4.96rem;
+    font-size: .28rem;
+  }
+  .next {
+    background: rgba(68,142,246,1);
   }
 
 </style>
