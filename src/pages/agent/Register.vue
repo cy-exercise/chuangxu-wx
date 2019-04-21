@@ -35,7 +35,19 @@
             @file-submitted="submittedHandler"
           >
             <div class="clear-fix">
-              <cube-upload-file v-for="(file, i) in files" :file="file" :key="i"></cube-upload-file>
+              <cube-upload-file v-for="(file, i) in files" :file="file" :key="i">
+                <div data-v-7e1948de="" class="cube-upload-file">
+                  <div class="cube-upload-file-def"
+                       :style="`background-image: url(${file.url});`">
+                    <i class="cubeic-wrong"></i>
+                    <div class="cube-upload-file-state cube-upload-file_stat" v-show="show">
+                      <!--<i class="cube-upload-file-status cubeic-warn"></i> -->
+                      <!--<span class="cube-upload-file-progress">100%</span>-->
+                      <cube-loading></cube-loading>
+                    </div>
+                  </div>
+                </div>
+              </cube-upload-file>
               <cube-upload-btn :multiple="false">
                 <div>
                   <img src="/static/images/identity-card-front.png" alt="">
@@ -79,6 +91,7 @@
               <cube-upload-btn :multiple="false">
                 <div>
                   <img src="/static/images/hand-card.png" alt="">
+                  <!--<cube-loading></cube-loading>-->
                 </div>
               </cube-upload-btn>
             </div>
@@ -94,8 +107,10 @@
 
 <script>
   import OSS from 'ali-oss'
+
   const qs = require('qs');
   import Header from '../common/Header'
+
   export default {
     name: "Register",
     data() {
@@ -124,10 +139,11 @@
         user: '',
         brand_id: '',
         column1: [
-          { text: '工商银行', value: '1002'},
-          { text: '农业银行', value: '1005' },
-          { text: '中国银行', value: '1026' }
-          ]
+          {text: '工商银行', value: '1002'},
+          {text: '农业银行', value: '1005'},
+          {text: '中国银行', value: '1026'}
+        ],
+        show: false
       }
     },
     components: {
@@ -144,7 +160,7 @@
         } else if (type === 'back') {
           file = this.files_back[0]
           file && this.$refs.uploadBack.removeFile(file)
-        } else  {
+        } else {
           file = this.files_hand[0]
           file && this.$refs.uploadHand.removeFile(file)
         }
@@ -161,7 +177,12 @@
       },
       submittedHandler(file, next) {
 
-        this.getStsToken(file)
+        // this.getStsToken(file)
+        // let self = this
+        // setTimeout(function () {
+        //   self.$refs.uploadFront.removeFile(file)
+        // }, 5000)
+
       },
       checkSuccess(res, file) {
         console.log(res)
@@ -180,7 +201,7 @@
             accessKeyId: res.data.data.access_key_id,
             accessKeySecret: res.data.data.access_key_secret,
             bucket: 'chuangxu',
-            stsToken:res.data.data.security_token
+            stsToken: res.data.data.security_token
           })
           console.log(file)
 
@@ -267,17 +288,20 @@
   .register {
     height: 100%;
   }
+
   .info-wrapper {
     background: #F8F8F8;
     width: 100%;
     height: 100%;
   }
+
   .base-info {
     padding-left: .32rem;
     padding-right: .32rem;
     background: #ffffff;
     height: 5rem;
   }
+
   .base-title {
     height: .74rem;
     line-height: .74rem;
@@ -285,6 +309,7 @@
     font-weight: 500;
     font-size: .24rem;
   }
+
   .base-input {
     background: #F8F8F8;
     height: .76rem;
@@ -295,11 +320,13 @@
     color: #B5B5B5;
     display flex
   }
+
   .base-input input {
     background: #F8F8F8;
     flex 1
     padding-left .1rem
   }
+
   .input-name {
     display: inline-block;
     color: #515151;
@@ -308,6 +335,7 @@
     padding-left .18rem
     font-size: .28rem;
   }
+
   .bank-card input {
     font-size .28rem
     background #F8F8F8
@@ -316,6 +344,7 @@
     line-height .76rem
     float left
   }
+
   .bank-card-title
     position relative
     /*width 1.87rem*/
@@ -324,6 +353,7 @@
     font-size .28rem
     color #B5B5B5
     /*text-align center*/
+
     &:after
       position absolute
       content ""
@@ -332,30 +362,35 @@
       height .4rem
       top 50%
       margin-top -.2rem
-      background  rgba(81,81,81,.5)
+      background rgba(81, 81, 81, .5)
+
   .bank-card span {
     font-size: .28rem;
   }
+
   .card-block {
     height: 2.92rem;
     background: #ffffff;
     padding-left: .32rem;
     padding-right: .32rem;
   }
+
   .card-block-name {
     height: .74rem;
     line-height: .74rem;
     color: #B5B5B5;
     font-size: .24rem;
   }
+
   .hand-photo {
     height: 3.45rem;
     background: #ffffff;
     padding-left: .32rem;
     padding-right: .32rem;
   }
+
   .button {
-    background:rgba(68,142,246,0.5);
+    background: rgba(68, 142, 246, 0.5);
     border-radius: .08rem;
     margin: 0 auto;
     color: #ffffff;
@@ -365,47 +400,60 @@
     width: 4.96rem;
     font-size: .28rem;
   }
+
   .button.can_submit {
-    background:rgba(68,142,246,1);
+    background: rgba(68, 142, 246, 1);
   }
+
   .card-front, .card-back {
     background: #F8F8F8;
     border-radius: .1rem;
     width: 3.33rem;
     height: 1.78rem;
   }
+
   .card-front {
     float: left;
   }
+
   .card-back {
     float: right;
   }
+
   .cube-upload
     .cube-upload-file, .cube-upload-btn
       margin: 0
       height: 1.78rem
+
     .cube-upload-file
       margin: 0
+
       + .cube-upload-btn
         margin-top: -1.78rem
         opacity: 0
->>>  .cube-upload-file-def
-      width: 100%
-      height: 100%
-      .cubeic-wrong
-        display: none
-    .cube-upload-btn
-      display: flex
+
+  >>> .cube-upload-file-def
+    width: 100%
+    height: 100%
+
+    .cubeic-wrong
+      display: none
+
+  .cube-upload-btn
+    display: flex
+    align-items: center
+    justify-content: center
+
+    > div
+      text-align: center
+
+    img
+      display: inline-flex
       align-items: center
       justify-content: center
-      > div
-        text-align: center
-      img
-        display: inline-flex
-        align-items: center
-        justify-content: center
-        width: .8rem
-        height: .55rem
+      width: .8rem
+      height: .55rem
+
   .hand-card {
     width: 4.32rem;
     height: 2.31rem;
@@ -413,27 +461,35 @@
     border-radius: .1rem;
     margin 0 auto
   }
+
   .hand-card
     .cube-upload
       .cube-upload-file, .cube-upload-btn
         margin: 0
         height: 2.31rem
+
       .cube-upload-file
         margin: 0
+
         + .cube-upload-btn
           margin-top: -2.31rem
           opacity: 0
-      >>>  .cube-upload-file-def
+
+      >>> .cube-upload-file-def
         width: 100%
         height: 100%
+
         .cubeic-wrong
           display: none
+
       .cube-upload-btn
         display: flex
         align-items: center
         justify-content: center
+
         > div
           text-align: center
+
         img
           display: inline-flex
           align-items: center

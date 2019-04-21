@@ -25,6 +25,9 @@
         <div class="order-count">123<span class="unit">单</span></div>
         <div class="order-count-name">我的业绩</div>
       </div>
+      <div class="overview-line" ref="orderline">
+
+      </div>
     </div>
     <div style="height: .15rem;background: #F8F8F8;"></div>
     <div class="order-list">
@@ -46,6 +49,9 @@
 
 <script>
   import Header from '../common/Header'
+  var echarts = require('echarts/lib/echarts');
+  require('echarts/lib/chart/line');
+  // import echarts from 'echarts'
   export default {
     name: "Order",
     components: {
@@ -55,7 +61,7 @@
       return {
         type: 'nurse',
         loading: false,
-        switch_show: true,
+        switch_show: false,
         order_type: ['医学','护理', '药学', '医技', '其他'],
         list: [
           {
@@ -172,7 +178,50 @@
           }
           this.loading = false;
         }, 2500);
+      },
+      drawLine(){
+        // 基于准备好的dom，初始化echarts实例
+        console.log(this.$refs.orderline)
+        let myChart = echarts.init(this.$refs.orderline)
+        // 绘制图表
+        let option = {
+          xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            splitNumber: 2,
+            scale: true,
+            // show:false,
+            // splitLine:{
+            //   show:false
+            // }
+
+          },
+          yAxis: {
+            type: 'value',
+            splitNumber: 2,
+            scale: true,
+            show:false,
+            splitLine:{
+              show:false
+            }
+          },
+          grid: {
+            top: '20px',
+            left: '0',
+            // right: '0',
+            bottom: '10px',
+            containLabel: true
+          },
+          series: [{
+            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            type: 'line'
+          }]
+        };
+        myChart.setOption(option);
       }
+    },
+    mounted() {
+      this.drawLine()
     }
   }
 </script>
@@ -311,5 +360,9 @@
     height: .75rem;
     line-height: .75rem;
     text-align: center;
+  }
+  .overview-line {
+    height: 120px;
+    margin-top: .6rem;
   }
 </style>

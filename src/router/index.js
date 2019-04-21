@@ -16,6 +16,7 @@ import Withdraw from '../pages/agent/Withdraw'
 import WithdrawInfo from '../pages/agent/WithdrawInfo'
 import Bill from '../pages/agent/Bill'
 import Header from '../pages/common/Header'
+import Upload from '../pages/common/Upload'
 
 
 Vue.use(Router)
@@ -26,7 +27,13 @@ export default new Router({
       path: '/apply',
       name: 'apply',
       component: Apply
-    }, {
+    },
+    {
+      path: '/upload',
+      name: 'Upload',
+      component: Upload
+    },
+    {
       path: '/header',
       name: 'Header',
       component: Header
