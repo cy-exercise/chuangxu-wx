@@ -17,12 +17,18 @@ import WithdrawInfo from '../pages/agent/WithdrawInfo'
 import Bill from '../pages/agent/Bill'
 import Header from '../pages/common/Header'
 import Upload from '../pages/common/Upload'
+import Login from '../pages/agent/Login'
 
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
+    {
+      path: '/agent/login',
+      name: 'login',
+      component: Login
+    },
     {
       path: '/apply',
       name: 'apply',

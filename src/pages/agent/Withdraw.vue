@@ -27,7 +27,7 @@
         <div class="input-title">提现金额</div>
         <div class="imput-wrapper">
           <span>￥</span>
-          <input type="text" placeholder="" ref="withdraw" v-model="total">
+          <input type="number" placeholder="" ref="withdraw" v-model="total">
         </div>
       </div>
       <div class="withdraw-submit" :class="{submit: total}">
@@ -183,6 +183,8 @@
     font-size: .5rem;
     font-weight: 500;
     width: 5.4rem;
+    padding-left: .1rem;
+    box-sizing: border-box;
   }
   .withdraw-submit {
     height: 1.92rem;

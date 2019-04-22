@@ -75,7 +75,7 @@
     /*width: .4rem;*/
     position: absolute;
     top: -.05rem;
-    background: #ffffff;
+    /*background: #ffffff;*/
   }
   .step-doing {
     left: -.2rem;

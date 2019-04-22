@@ -17,7 +17,7 @@
           <input type="text" placeholder="请输入您的身份证号码" v-model="id_card">
         </div>
         <div class="base-input">
-          <div class="input-name bank-card-title" @click="showPicker">{{bank_name}}</div>
+          <div class="input-name bank-card-title" @click="showPicker">{{bank_name ? bank_name : '选择银行卡'}}</div>
           <input type="text" placeholder="请选择银行卡并填写银行卡号" v-model="bank_card">
         </div>
       </div>
@@ -32,15 +32,15 @@
             :action="action"
             @files-added="addedHandler('front')"
             @file-error="errHandler"
-            @file-submitted="submittedHandler"
+            @file-submitted="submittedFrontHandler"
           >
             <div class="clear-fix">
               <cube-upload-file v-for="(file, i) in files" :file="file" :key="i">
-                <div data-v-7e1948de="" class="cube-upload-file">
+                <div class="cube-upload-file">
                   <div class="cube-upload-file-def"
                        :style="`background-image: url(${file.url});`">
                     <i class="cubeic-wrong"></i>
-                    <div class="cube-upload-file-state cube-upload-file_stat" v-show="show">
+                    <div class="cube-upload-file-state cube-upload-file_stat" v-show="show === 'front'">
                       <!--<i class="cube-upload-file-status cubeic-warn"></i> -->
                       <!--<span class="cube-upload-file-progress">100%</span>-->
                       <cube-loading></cube-loading>
@@ -61,10 +61,25 @@
             ref="uploadBack"
             v-model="files_back"
             :action="action"
+            :auto="auto"
             @files-added="addedHandler('back')"
-            @file-error="errHandler">
+            @file-error="errHandler"
+            @file-submitted="submittedBackHandler"
+          >
             <div class="clear-fix">
-              <cube-upload-file v-for="(file, i) in files_back" :file="file" :key="i"></cube-upload-file>
+              <cube-upload-file v-for="(file, i) in files_back" :file="file" :key="i">
+                <div class="cube-upload-file">
+                  <div class="cube-upload-file-def"
+                       :style="`background-image: url(${file.url});`">
+                    <i class="cubeic-wrong"></i>
+                    <div class="cube-upload-file-state cube-upload-file_stat" v-show="show === 'back'">
+                      <!--<i class="cube-upload-file-status cubeic-warn"></i> -->
+                      <!--<span class="cube-upload-file-progress">100%</span>-->
+                      <cube-loading></cube-loading>
+                    </div>
+                  </div>
+                </div>
+              </cube-upload-file>
               <cube-upload-btn :multiple="false">
                 <div>
                   <img src="/static/images/identity-card-front.png" alt="">
@@ -82,12 +97,25 @@
             ref="uploadHand"
             v-model="files_hand"
             :action="action"
+            :auto="auto"
             @files-added="addedHandler('hand')"
             @file-error="errHandler"
-            @file-success="successHandler"
+            @file-submitted="submittedHandHandler"
           >
             <div class="clear-fix">
-              <cube-upload-file v-for="(file, i) in files_hand" :file="file" :key="i"></cube-upload-file>
+              <cube-upload-file v-for="(file, i) in files_hand" :file="file" :key="i">
+                <div class="cube-upload-file">
+                  <div class="cube-upload-file-def"
+                       :style="`background-image: url(${file.url});`">
+                    <i class="cubeic-wrong"></i>
+                    <div class="cube-upload-file-state cube-upload-file_stat" v-show="show === 'hand'">
+                      <!--<i class="cube-upload-file-status cubeic-warn"></i> -->
+                      <!--<span class="cube-upload-file-progress">100%</span>-->
+                      <cube-loading></cube-loading>
+                    </div>
+                  </div>
+                </div>
+              </cube-upload-file>
               <cube-upload-btn :multiple="false">
                 <div>
                   <img src="/static/images/hand-card.png" alt="">
@@ -99,7 +127,10 @@
         </div>
       </div>
       <div style="height: .4rem;"></div>
-      <div class="button" @click="handleSubmit" :class="{can_submit:  name}">提交</div>
+      <div class="button" @click="handleSubmit"
+           :class="{can_submit:  gitStatus()}"
+      >提交
+      </div>
       <div style="height: .4rem;"></div>
     </div>
   </div>
@@ -131,7 +162,7 @@
         address: '',
         id_card: '',
         bank: '',
-        bank_name: '选择银行卡',
+        bank_name: '',
         bank_card: '',
         id_url1: '',
         id_url2: '',
@@ -143,7 +174,8 @@
           {text: '农业银行', value: '1005'},
           {text: '中国银行', value: '1026'}
         ],
-        show: false
+        show: '',
+        canSubmit: this.name
       }
     },
     components: {
@@ -152,7 +184,6 @@
     methods: {
       addedHandler(type) {
 
-        //const sts = this.getStsToken(this.files[0])
         let file;
         if (type === 'front') {
           file = this.files[0]
@@ -164,8 +195,6 @@
           file = this.files_hand[0]
           file && this.$refs.uploadHand.removeFile(file)
         }
-        // console.log(this.files)
-
       },
       errHandler(file) {
         // const msg = file.response.message
@@ -175,27 +204,23 @@
           time: 1000
         }).show()
       },
-      submittedHandler(file, next) {
 
-        // this.getStsToken(file)
-        // let self = this
-        // setTimeout(function () {
-        //   self.$refs.uploadFront.removeFile(file)
-        // }, 5000)
-
+      submittedFrontHandler(file) {
+        this.show = 'front'
+        this.upload(file, 'front')
       },
-      checkSuccess(res, file) {
-        console.log(res)
-        console.log(file)
-
+      submittedBackHandler(file) {
+        this.show = 'back'
+        this.upload(file, 'back')
       },
-      // 上传成功回调
-      successHandler(file) {
-
+      submittedHandHandler(file) {
+        this.show = 'hand'
+        this.upload(file, 'hand')
       },
-      getStsToken(file) {
+      upload(file, type) {
+        let self = this;
         this.$ajax.get('/api/v1/config/sts/token').then(res => {
-          console.log(res.data)
+          // console.log(res.data)
           let client = new OSS({
             region: 'oss-cn-shanghai',
             accessKeyId: res.data.data.access_key_id,
@@ -203,7 +228,6 @@
             bucket: 'chuangxu',
             stsToken: res.data.data.security_token
           })
-          console.log(file)
 
           var timestamp = (new Date()).getTime();
           let name = 'upload/agent/' + timestamp + '.' + file.file.type.split("/")[1]
@@ -212,27 +236,37 @@
             console.log('put success: %j', r1);
             return client.get(name);
           }).then(function (r2) {
-            console.log('get success: %j', r2);
-            // _this.$api.User.editAvatar('0',r2.res.requestUrls[0],'0').then(res=>{
-            //   _this.dataList.avatar.url = r2.res.requestUrls[0]
-            // })
+            //console.log('get success: %j', r2);
+            if (type === 'front') {
+              self.id_url1 = r2.res.requestUrls[0]
+            }
+            if (type === 'back') {
+              self.id_url2 = r2.res.requestUrls[0]
+            }
+            if (type === 'hand') {
+              self.face_url = r2.res.requestUrls[0]
+            }
+            self.show = ''
           }).catch(function (err) {
             console.error('error: %j', err);
           });
         })
       },
       handleSubmit() {
+        if (!this.gitStatus()) {
+          return false;
+        }
         let data = {
           name: this.name,
           phone: this.phone,
           address: this.address,
           id_card: this.id_card,
-          bank: this.bank,
+          bank: this.bank_name,
           bank_card: this.bank_card,
           brand_id: '13245646',
-          id_uri1: '',
-          id_uri2: '',
-          face_uri: ''
+          id_uri1: this.id_url1,
+          id_uri2: this.id_uri2,
+          face_uri: this.face_uri
         }
         this.$ajax.post('api/v1/agent', qs.stringify(data)).then(res => {
           console.log(res.data)
@@ -272,12 +306,9 @@
         this.bank = selectedVal[0]
         console.log(selectedText)
       },
-      cancelHandle() {
-        this.$createToast({
-          type: 'correct',
-          txt: 'Picker canceled',
-          time: 1000
-        }).show()
+      gitStatus() {
+        return this.name && this.address && this.id_card && this.bank_name
+          && this.bank_card && this.id_uri1 && this.id_url2 && this.face_url
       }
     }
   }

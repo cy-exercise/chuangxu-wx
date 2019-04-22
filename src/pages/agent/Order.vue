@@ -51,6 +51,7 @@
   import Header from '../common/Header'
   var echarts = require('echarts/lib/echarts');
   require('echarts/lib/chart/line');
+  require ('echarts/theme/macarons');
   // import echarts from 'echarts'
   export default {
     name: "Order",
@@ -188,13 +189,19 @@
           xAxis: {
             type: 'category',
             data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            splitNumber: 2,
-            scale: true,
+            // splitNumber: 2,
+            // scale: true,
             // show:false,
             // splitLine:{
             //   show:false
-            // }
-
+            // },
+            axisTick: {
+              show: false
+            },
+            axisLine: {
+              show: false
+            },
+            boundaryGap: false
           },
           yAxis: {
             type: 'value',
@@ -213,8 +220,18 @@
             containLabel: true
           },
           series: [{
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            type: 'line'
+            data: [10, 200, 901, 200, 1290, 1330, 500],
+            type: 'line',
+            itemStyle: {
+              normal: {
+                lineStyle: {
+                  color: "#28B2FE",
+                  type: 'solid'
+                }
+              }
+            },
+            symbol: 'none',
+            smooth:true
           }]
         };
         myChart.setOption(option);
@@ -303,7 +320,7 @@
   }
   .price {
     margin-left: 1.06rem;
-    margin-right: .79rem;
+    /*margin-right: .79rem;*/
     font-size: .32rem;
     font-weight: 500;
     color: #448EF6;
