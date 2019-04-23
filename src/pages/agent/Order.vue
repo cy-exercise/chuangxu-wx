@@ -36,11 +36,11 @@
         class="order-block"
 
       >
-        <li class="order-item border-bottom" v-for="item in list">
-          <span class="user-name">{{item.name}}</span>
-          <span class="order-name">{{item.order_name}}</span>
+        <li class="order-item border-bottom" v-for="item in list" >
+          <span class="user-name">{{item.user.name}}</span>
+          <span class="order-name">{{item.order_details[0].product.title}}</span>
           <span class="price">￥{{item.price}}</span>
-          <span class="order-date">{{item.date}}</span>
+          <span class="order-date">{{item.created_at}}</span>
         </li>
       </ul>
     </div>
@@ -64,104 +64,26 @@
         loading: false,
         switch_show: false,
         order_type: ['医学','护理', '药学', '医技', '其他'],
-        list: [
-          {
-            name: '崔洋',
-            order_name: '医学正高',
-            price: '90.00',
-            date: '2018/06/01'
-          },
-          {
-            name: '崔洋',
-            order_name: '医学正高',
-            price: '90.00',
-            date: '2018/06/01'
-          },
-          {
-            name: '崔洋',
-            order_name: '医学正高',
-            price: '90.00',
-            date: '2018/06/01'
-          },
-          {
-            name: '崔洋',
-            order_name: '医学正高',
-            price: '90.00',
-            date: '2018/06/01'
-          },
-          {
-            name: '崔洋',
-            order_name: '医学正高',
-            price: '90.00',
-            date: '2018/06/01'
-          },
-          {
-            name: '崔洋',
-            order_name: '医学正高',
-            price: '90.00',
-            date: '2018/06/01'
-          },
-          {
-            name: '崔洋',
-            order_name: '医学正高',
-            price: '90.00',
-            date: '2018/06/01'
-          },
-          {
-            name: '崔洋',
-            order_name: '医学正高',
-            price: '90.00',
-            date: '2018/06/01'
-          },
-          {
-            name: '崔洋',
-            order_name: '医学正高',
-            price: '90.00',
-            date: '2018/06/01'
-          },
-          {
-            name: '崔洋',
-            order_name: '医学正高',
-            price: '90.00',
-            date: '2018/06/01'
-          },
-          {
-            name: '崔洋',
-            order_name: '医学正高',
-            price: '90.00',
-            date: '2018/06/01'
-          },
-          {
-            name: '崔洋',
-            order_name: '医学正高',
-            price: '90.00',
-            date: '2018/06/01'
-          },
-          {
-            name: '崔洋',
-            order_name: '医学正高',
-            price: '90.00',
-            date: '2018/06/01'
-          },
-          {
-            name: '崔洋',
-            order_name: '医学正高',
-            price: '90.00',
-            date: '2018/06/01'
-          },
-          {
-            name: '崔洋',
-            order_name: '医学正高',
-            price: '90.00',
-            date: '2018/06/01'
-          },
-
-        ]
+        brand_id_map: {
+          bao: '53b7715b-95cd-4d18-bc88-0f48dc5b4623',
+          nurse: '5946661e-d8a2-49be-9202-b231ca907739',
+          medical: '23f2efa5-2cbe-4060-bbbb-79bc8a64481a'
+        },
+        brand_id: '5946661e-d8a2-49be-9202-b231ca907739',
+        agents: {},
+        list: {},
+        week: [],
+        orders_count: []
       }
     },
     methods: {
       handleSwitch(type) {
-        this.type = type
+        this.type = type;
+        this.brand_id = this.brand_id_map[type];
+        let agent_id = this.getAgentId(this.brand_id);
+        console.log(agent_id);
+        this.getOrders(agent_id);
+        this.getOrdersWeek(agent_id);
       },
       showSwitch() {
         this.switch_show = true
@@ -181,14 +103,14 @@
         }, 2500);
       },
       drawLine(){
+        let self = this
         // 基于准备好的dom，初始化echarts实例
-        console.log(this.$refs.orderline)
         let myChart = echarts.init(this.$refs.orderline)
         // 绘制图表
         let option = {
           xAxis: {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            data: self.week,
             // splitNumber: 2,
             // scale: true,
             // show:false,
@@ -201,7 +123,13 @@
             axisLine: {
               show: false
             },
-            boundaryGap: false
+            boundaryGap: false,
+            axisLabel: {
+              textStyle: {
+                color: '#B5B5B5',
+                fontSize:'10'
+              },
+            },
           },
           yAxis: {
             type: 'value',
@@ -220,7 +148,7 @@
             containLabel: true
           },
           series: [{
-            data: [10, 200, 901, 200, 1290, 1330, 500],
+            data: self.orders_count,
             type: 'line',
             itemStyle: {
               normal: {
@@ -235,10 +163,51 @@
           }]
         };
         myChart.setOption(option);
+      },
+      getOrders(agent_id) {
+        let query = `?status=0`;
+        this.$ajax.get(`/api/v1/agent/${agent_id}/order` + query).then(res => {
+          this.list = res.data.data.data
+        }).catch(reason => {
+          console.log(reason)
+        })
+      },
+      getOrdersWeek(agent_id) {
+        let query = `?status=0`;
+        this.$ajax.get(`/api/v1/agent/${agent_id}/order_week` + query).then(res => {
+          this.week = res.data.data.dates;
+          this.orders_count = res.data.data.orders_count
+        }).catch(reason => {
+          console.log(reason)
+        })
+      },
+      getAgents() {
+        this.agents = JSON.parse(localStorage.getItem('agents'))
+      },
+      getAgentId(brand_id = false) {
+        if (!brand_id) {
+          brand_id = this.brand_id
+        }
+        brand_id = '13245646'
+        let agent = this.agents.find(item => {
+           return item.brand_id == brand_id
+        });
+        console.log(agent)
+        return agent.id
       }
     },
     mounted() {
-      this.drawLine()
+      //this.drawLine(this.week, this.orders_count);
+      this.getOrders(this.getAgentId());
+    },
+    created() {
+      this.getAgents();
+      this.getOrdersWeek(this.getAgentId());
+    },
+    watch: {
+      week() {
+        this.drawLine()
+      }
     }
   }
 </script>
@@ -317,6 +286,10 @@
   }
   .order-name {
     margin-left: 1.06rem;
+    width: 1.1rem;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap
   }
   .price {
     margin-left: 1.06rem;
@@ -329,6 +302,10 @@
     font-size: .2rem;
     font-weight: 400;
     color: #B5B5B5;
+    width: 1rem;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap
   }
   .current-name {
     font-size: .24rem;
@@ -372,6 +349,8 @@
     box-shadow:0px 6px 12px 0px rgba(0,0,0,0.2);
     border-radius: .08rem;
     font-size: .28rem;
+    background: #ffffff;
+    z-index: 1;
   }
   .switch-block li {
     height: .75rem;

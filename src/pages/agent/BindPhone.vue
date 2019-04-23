@@ -8,12 +8,12 @@
           <img class="phone-icon" src="/static/images/phone.png" alt="">
           <span class="phone-prefix">+86</span>
         </div>
-        <input class="phone-input" type="text" placeholder="请输入手机号码" v-model="phone">
+        <input class="phone-input" type="number" placeholder="请输入手机号码" v-model="phone" maxlength="11">
       </div>
       <div class="code-block">
         <div class="code-block-main">
           <img class="code-icon" src="/static/images/code.png" alt="">
-          <input type="text" placeholder="请输入验证码" class="code-input" v-model="code">
+          <input type="number" placeholder="请输入验证码" class="code-input" v-model="code" maxlength="6">
         </div>
         <div class="code-button" >
           <span class="send-code" v-show="show" @click="getCode">获取验证码</span>

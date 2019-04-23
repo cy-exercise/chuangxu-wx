@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <SelectItem v-show="showSelect" :is_show="showSelect" v-on:addSelectEvent="addSelect" v-on:handleCloseEvent = "handleColse"></SelectItem>
-    <Header :title="title" to="/"></Header>
+    <Header :title="title" to="/salary"></Header>
     <div class="container">
       <div class="withdraw-title border-bottom" @click="handleSelect">
         <div class="withdraw-wx" v-show="!show_card">
@@ -32,8 +32,8 @@
       </div>
       <div class="withdraw-submit" :class="{submit: total}">
         <div class="submit-title">
-          <span class="salary">工资余额￥2500.00，</span>
-          <span class="all">全部提现</span>
+          <span class="salary">工资余额￥{{salary}}，</span>
+          <span class="all" @click="handleAll">全部提现</span>
         </div>
         <div class="button" @click="handleSubmit">提交</div>
       </div>
@@ -59,7 +59,8 @@
           name: '',
           account: ''
         },
-        total: ''
+        total: '',
+        salary: '2500.00'
       }
     },
     methods: {
@@ -75,8 +76,7 @@
         }
         this.showSelect = false
       },
-      handleColse()
-      {
+      handleColse() {
         this.showSelect = false;
       },
       handleSubmit() {
@@ -88,6 +88,9 @@
         if (true) {
           this.$router.push('/withdraw_info')
         }
+      },
+      handleAll() {
+        this.total = this.salary
       }
     },
     mounted() {
@@ -130,11 +133,6 @@
     width: .44rem;
     margin-left: .49rem;
   }
-  .logo-name {
-    font-size: .28rem;
-    color: #515151;
-    margin-left: .21rem;
-  }
   .description {
     position: absolute;
     bottom: .3rem;
@@ -167,7 +165,7 @@
     position: absolute;
     bottom: .16rem;
     display: flex;
-
+    height: .7rem;
   }
   .imput-wrapper span {
     font-size: .5rem;
