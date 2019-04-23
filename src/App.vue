@@ -16,8 +16,8 @@
         }
       }
     },
-    beforeMount() {
-      this.loginCheck()
+    created() {
+      // this.loginCheck()
     }
   }
 </script>

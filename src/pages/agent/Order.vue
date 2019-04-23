@@ -12,37 +12,50 @@
         <div class="nav-item" :class="{is_selected: 'bao'=== type}" @click="handleSwitch('bao')">创序医考宝</div>
       </router-link>
     </div>
-    <div class="overview">
-      <div class="overview-head">
-        <div class="current-name">全部</div>
-        <div class="switch-block-button" v-show="!switch_show" @click="showSwitch">切换</div>
-        <ul class="switch-block" v-show="switch_show">
-          <li class="all border-bottom">全部</li>
-          <li class="border-bottom" v-for="type in order_type" @click="switchType">{{type}}</li>
+    <div class="order-content">
+      <div class="overview">
+        <div class="overview-head">
+          <div class="current-name">全部</div>
+          <div class="switch-block-button" v-show="!switch_show" @click="showSwitch">切换</div>
+          <ul class="switch-block" v-show="switch_show">
+            <li class="all border-bottom">全部</li>
+            <li class="border-bottom" v-for="type in order_type" @click="switchType">{{type}}</li>
+          </ul>
+        </div>
+        <div class="order-count-wrapper">
+          <div class="order-count">123<span class="unit">单</span></div>
+          <div class="order-count-name">我的业绩</div>
+        </div>
+        <div class="overview-line" ref="orderline">
+
+        </div>
+      </div>
+      <div style="height: .15rem;background: #F8F8F8;"></div>
+      <div class="order-list">
+        <div class="order-title border-bottom">下单详情</div>
+        <ul
+          class="order-block"
+
+        >
+          <!--<li class="order-item border-bottom" v-for="item in list" >-->
+          <!--<span class="user-name">{{item.user.name}}</span>-->
+          <!--<span class="order-name">{{item.order_details[0].product.title}}</span>-->
+          <!--<span class="price">￥{{item.price}}</span>-->
+          <!--<span class="order-date">{{item.created_at}}</span>-->
+          <!--</li>-->
+          <li class="order-item border-bottom" v-for="item in list_test" >
+            <div class="order-item-title">
+              <div class="order-name">{{item.order_name}}</div>
+              <div class="price">￥{{item.price}}</div>
+            </div>
+            <div class="order-item-username">
+              <div class="user-name">{{item.user_name}}</div>
+              <div class="order-date">{{item.date}}</div>
+            </div>
+
+          </li>
         </ul>
       </div>
-      <div class="order-count-wrapper">
-        <div class="order-count">123<span class="unit">单</span></div>
-        <div class="order-count-name">我的业绩</div>
-      </div>
-      <div class="overview-line" ref="orderline">
-
-      </div>
-    </div>
-    <div style="height: .15rem;background: #F8F8F8;"></div>
-    <div class="order-list">
-      <div class="order-title border-bottom">下单详情</div>
-      <ul
-        class="order-block"
-
-      >
-        <li class="order-item border-bottom" v-for="item in list" >
-          <span class="user-name">{{item.user.name}}</span>
-          <span class="order-name">{{item.order_details[0].product.title}}</span>
-          <span class="price">￥{{item.price}}</span>
-          <span class="order-date">{{item.created_at}}</span>
-        </li>
-      </ul>
     </div>
   </div>
 </template>
@@ -72,6 +85,79 @@
         brand_id: '5946661e-d8a2-49be-9202-b231ca907739',
         agents: {},
         list: {},
+        list_test:[
+          {
+            user_name: '柳林东',
+            order_name: '2019年中医执业医师(第一阶段)考试题库',
+            price: '2500',
+            date: '2019/02/01'
+          },{
+            user_name: '柳林东',
+            order_name: '2019年中医执业医师(第一阶段)考试题库',
+            price: '2500',
+            date: '2019/02/01'
+          },{
+            user_name: '柳林东',
+            order_name: '2019年中医执业医师(第一阶段)考试题库',
+            price: '2500',
+            date: '2019/02/01'
+          },{
+            user_name: '柳林东',
+            order_name: '2019年中医执业医师(第一阶段)考试题库',
+            price: '2500',
+            date: '2019/02/01'
+          },{
+            user_name: '柳林东',
+            order_name: '2019年中医执业医师(第一阶段)考试题库',
+            price: '2500',
+            date: '2019/02/01'
+          },{
+            user_name: '柳林东',
+            order_name: '2019年中医执业医师(第一阶段)考试题库',
+            price: '2500',
+            date: '2019/02/01'
+          },{
+            user_name: '柳林东',
+            order_name: '2019年中医执业医师(第一阶段)考试题库',
+            price: '2500',
+            date: '2019/02/01'
+          },{
+            user_name: '柳林东',
+            order_name: '2019年中医执业医师(第一阶段)考试题库',
+            price: '2500',
+            date: '2019/02/01'
+          },{
+            user_name: '柳林东',
+            order_name: '2019年中医执业医师(第一阶段)考试题库',
+            price: '2500',
+            date: '2019/02/01'
+          },{
+            user_name: '柳林东',
+            order_name: '2019年中医执业医师(第一阶段)考试题库',
+            price: '2500',
+            date: '2019/02/01'
+          },{
+            user_name: '柳林东',
+            order_name: '2019年中医执业医师(第一阶段)考试题库',
+            price: '2500',
+            date: '2019/02/01'
+          },{
+            user_name: '柳林东',
+            order_name: '2019年中医执业医师(第一阶段)考试题库',
+            price: '2500',
+            date: '2019/02/01'
+          },{
+            user_name: '柳林东',
+            order_name: '2019年中医执业医师(第一阶段)考试题库',
+            price: '2500',
+            date: '2019/02/01'
+          },{
+            user_name: '柳林东',
+            order_name: '2019年中医执业医师(第一阶段)考试题库',
+            price: '2500',
+            date: '2019/02/01'
+          }
+        ],
         week: [],
         orders_count: []
       }
@@ -198,16 +284,16 @@
     },
     mounted() {
       //this.drawLine(this.week, this.orders_count);
-      this.getOrders(this.getAgentId());
+      // this.getOrders(this.getAgentId());
     },
     created() {
-      this.getAgents();
-      this.getOrdersWeek(this.getAgentId());
+      // this.getAgents();
+      // this.getOrdersWeek(this.getAgentId());
     },
     watch: {
-      week() {
-        this.drawLine()
-      }
+      // week() {
+      //   this.drawLine()
+      // }
     }
   }
 </script>
@@ -263,49 +349,63 @@
     font-size: .2rem;
     padding-left: .32rem;
   }
+  .order-block {
+    padding-left: .32rem;
+  }
   .order-item {
-    height: .95rem;
-    line-height: .95rem;
-    margin-left: .32rem;
+    height: 1.36rem;
     padding-right: .32rem;
   }
-  .order-item span {
-    float: left;
+  .order-item-title,.order-item-username {
+    overflow: hidden;
   }
-  .order-item .order-date{
-    float: right;
+  .order-item-title {
+    height: .4rem;
+    line-height: .4rem;
+    margin-top: .2rem;
+  }
+  .order-item-username {
+    height: .33rem;
+    line-height: .33rem;
+    margin-top: .21rem;
   }
   .order-list {
-    height: 5.98rem;
-    overflow: scroll;
+
   }
   .order-name, .user-name {
+
+    float: left;
+  }
+  .order-name {
     font-size: .28rem;
     font-weight: 400;
     color: #515151;
+    /*overflow:hidden;*/
+    /*text-overflow:ellipsis;*/
+    /*white-space:nowrap*/
   }
-  .order-name {
-    margin-left: 1.06rem;
-    width: 1.1rem;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap
+  .user-name {
+    font-size: .24rem;
+    font-weight: 400;
+    color: #B5B5B5;
   }
   .price {
-    margin-left: 1.06rem;
+    /*margin-left: 1.06rem;*/
     /*margin-right: .79rem;*/
     font-size: .32rem;
     font-weight: 500;
     color: #448EF6;
+    float: right;
   }
   .order-date {
+    float: right;
     font-size: .2rem;
     font-weight: 400;
     color: #B5B5B5;
-    width: 1rem;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap
+    /*width: 1rem;*/
+    /*overflow:hidden;*/
+    /*text-overflow:ellipsis;*/
+    /*white-space:nowrap*/
   }
   .current-name {
     font-size: .24rem;
@@ -360,5 +460,9 @@
   .overview-line {
     height: 120px;
     margin-top: .6rem;
+  }
+  .order-content {
+    height: 11.3rem;
+    overflow: scroll;
   }
 </style>
