@@ -2,13 +2,31 @@
   <div class="agent-not">
     <img src="/static/images/agent-icon.png" alt="" class="icon">
     <div class="title">你还不是创序医考的代理</div>
-    <div class="button">申请代理</div>
+    <router-link :to="to">
+      <div class="button">申请代理</div>
+    </router-link>
   </div>
 </template>
 
 <script>
   export default {
-    name: "AgentNot"
+    name: "AgentNot",
+    data() {
+      return {
+        to: '/apply'
+      }
+    },
+    methods: {
+      init() {
+        console.log(localStorage.getItem('agents'))
+        if (localStorage.getItem('agents')) {
+          this.to = "/becomes"
+        }
+      }
+    },
+    created() {
+      this.init()
+    }
   }
 </script>
 

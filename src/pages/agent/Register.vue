@@ -170,9 +170,58 @@
         user: '',
         brand_id: '',
         column1: [
-          {text: '工商银行', value: '1002'},
-          {text: '农业银行', value: '1005'},
-          {text: '中国银行', value: '1026'}
+          {
+            "text": "工商银行",
+            "value": "1002"
+          },{
+            "text": "农业银行",
+            "value": "1005"
+          },{
+            "text": "中国银行",
+            "value": "1026"
+          },{
+            "text": "建设银行",
+            "value": "1003"
+          },{
+            "text": "招商银行",
+            "value": "1001"
+          },{
+            "text": "邮储银行",
+            "value": "1066"
+          },{
+            "text": "交通银行",
+            "value": "1020"
+          },{
+            "text": "浦发银行",
+            "value": "1004"
+          },{
+            "text": "民生银行",
+            "value": "1006"
+          },{
+            "text": "兴业银行",
+            "value": "1009"
+          },{
+            "text": "平安银行",
+            "value": "1010"
+          },{
+            "text": "中信银行",
+            "value": "1021"
+          },{
+            "text": "华夏银行",
+            "value": "1025"
+          },{
+            "text": "广发银行",
+            "value": "1027"
+          },{
+            "text": "光大银行",
+            "value": "1022"
+          },{
+            "text": "北京银行",
+            "value": "1032"
+          },{
+            "text": "宁波银行",
+            "value": "1056"
+          }
         ],
         show: '',
         canSubmit: this.name
@@ -254,7 +303,7 @@
       },
       handleSubmit() {
         if (!this.gitStatus()) {
-          return false;
+          //return false;
         }
         let data = {
           name: this.name,
@@ -263,10 +312,10 @@
           id_card: this.id_card,
           bank: this.bank_name,
           bank_card: this.bank_card,
-          brand_id: '13245646',
+          brand_id: this.brand_id,
           id_uri1: this.id_url1,
-          id_uri2: this.id_uri2,
-          face_uri: this.face_uri
+          id_uri2: this.id_url2,
+          face_uri: this.face_url
         }
         this.$ajax.post('api/v1/agent', qs.stringify(data)).then(res => {
           console.log(res.data)
@@ -307,9 +356,16 @@
         console.log(selectedText)
       },
       gitStatus() {
-        return this.name && this.address && this.id_card && this.bank_name
-          && this.bank_card && this.id_uri1 && this.id_url2 && this.face_url
+        return this.name && this.address && this.id_card && this.bank
+          && this.bank_card && this.id_url1 && this.id_url2 && this.face_url
+      },
+      init() {
+        this.brand_id = this.$route.query.brand_ids
+        this.phone = this.$route.query.phone
       }
+    },
+    mounted() {
+      this.init()
     }
   }
 </script>

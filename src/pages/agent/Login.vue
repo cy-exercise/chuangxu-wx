@@ -1,5 +1,5 @@
 <template>
-
+    <div></div>
 </template>
 
 <script>
@@ -8,6 +8,7 @@
     methods: {
       login() {
         const access_token = this.$route.query.access_token;
+
         this.$cookies.set('access_token', access_token);
         this.$ajax.defaults.headers.common['Authorization'] = 'Bearer ' + access_token
         this.getUserInfo(access_token);
@@ -18,6 +19,8 @@
         this.$ajax.post('/api/v1/user/info').then(res => {
           //this.$cookies.set('user', res.data.data)
           localStorage.setItem('user', JSON.stringify(res.data.data))
+          this.$cookies.set('user_id', res.data.data.id);
+          this.$cookies.set('user', res.data.data);
           self.getAgents(res.data.data.id);
         })
       },
@@ -31,14 +34,14 @@
                 brand_id: agent.brand_id
               }
             })
-            //this.$cookies.set('agents', agents)
+            this.$cookies.set('agents', JSON.stringify(agents))
             localStorage.setItem('agents', JSON.stringify(agents))
           }
         })
 
       }
     },
-    beforeMount() {
+    created() {
       this.login()
     }
   }

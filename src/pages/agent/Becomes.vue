@@ -10,7 +10,7 @@
               <div class="item-check">
                 <span class="checkbox__input" :class="{'is-checked': nurse}">
                   <span class="checkbox__inner"></span>
-                  <input type="checkbox" class="checkbox__original" @click="handleCheck" v-model="nurse" value="nurse">
+                  <input type="checkbox" class="checkbox__original" @click="handleCheck" v-model="nurse" value="nurse" :disabled="nurse_checked">
                 </span>
               </div>
               <div class="item-content border-bottom">
@@ -26,7 +26,7 @@
               <div class="item-check">
                  <span class="checkbox__input" :class="{'is-checked': medical}">
                   <span class="checkbox__inner"></span>
-                  <input type="checkbox" class="checkbox__original" v-model="medical" value="medical">
+                  <input type="checkbox" class="checkbox__original" v-model="medical"  value="medical">
                 </span>
               </div>
               <div class="item-content border-bottom">
@@ -72,7 +72,15 @@
         nurse: false,
         medical: false,
         bao: false,
-        next_to: '/register'
+        next_to: '/register',
+        brand_id_map: {
+          'nurse': '5946661e-d8a2-49be-9202-b231ca907739',
+          'bao': '53b7715b-95cd-4d18-bc88-0f48dc5b4623',
+          'medical': '23f2efa5-2cbe-4060-bbbb-79bc8a64481a'
+        },
+        nurse_checked: true,
+        medical_checked: false,
+        bao_checked: false,
       }
     },
     methods: {
@@ -82,12 +90,34 @@
       },
       handleNext() {
         if (this.nurse || this.medical || this.bao) {
+          let phone = this.$route.query.phone
           this.$router.push({
             path: 'register',
-            query: { nurse: this.nurse, medical: this.medical, bao: this.bao}
+            query: { brand_ids: this.getBrandIds(), phone: phone}
           })
         }
+      },
+      getBrandIds() {
+        let brand_ids = [];
+        if (this.medical) {
+          brand_ids.push(this.brand_id_map['medical'])
+        }
+        if (this.nurse) {
+          brand_ids.push(this.brand_id_map['nurse'])
+        }
+        if (this.bao){
+          brand_ids.push(this.brand_id_map['bao'])
+        }
+        return brand_ids.join()
+      },
+      brandCheck() {
+        // 判断之前是否已经选过
+        let agents = JSON.parse(this.$cookies.get('agents'))
+        console.log(agents)
       }
+    },
+    created() {
+      this.brandCheck()
     }
   }
 </script>

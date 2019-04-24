@@ -26,7 +26,7 @@
         </div>
       </router-link>
     </div>
-    <AgentInfo></AgentInfo>
+    <AgentInfo :agent="agent"></AgentInfo>
   </div>
 </template>
 
@@ -41,13 +41,57 @@
     },
     data() {
       return {
-        type: 'nurse'
+        type: 'nurse',
+        brand_ids: {
+          'nurse': '5946661e-d8a2-49be-9202-b231ca907739',
+          'bao': '53b7715b-95cd-4d18-bc88-0f48dc5b4623',
+          'medical': '23f2efa5-2cbe-4060-bbbb-79bc8a64481a'
+        },
+        ids_brand: {
+          "5946661e-d8a2-49be-9202-b231ca907739": 'nurse',
+          "53b7715b-95cd-4d18-bc88-0f48dc5b4623": 'bao',
+          "23f2efa5-2cbe-4060-bbbb-79bc8a64481a": 'medical'
+        },
+        brand_id: '5946661e-d8a2-49be-9202-b231ca907739',
+        agent: {},
+        agents: []
       }
     },
     methods: {
       handleSwitch(type) {
         this.type = type
+        this.brand_id = this.brand_ids[type]
+        this.agent = this.agents.find(agent => {
+          return agent.brand_id === this.brand_id
+        })
+      },
+      getAgents() {
+        let user_id = this.$cookies.get('user_id');
+        let query = `?user_id=${user_id}&status=0`
+        this.$ajax.get('/api/v1/agent' + query).then(res => {
+          console.log(res.data)
+          if (res.data.data.length > 0) {
+            let agents = res.data.data;
+            this.agents = res.data.data;
+            this.$cookies.set('agent', res.data.data)
+            this.agent = agents.find(agent => {
+              return agent.brand_id === this.brand_id
+            })
+            if (!this.agent) {
+              this.agent = agents[0]
+              this.brand_id = this.agent.brand_id
+              this.type = this.ids_brand[this.brand_id]
+            }
+          } else {
+
+          }
+        }).catch(error => {
+
+        })
       }
+    },
+    mounted() {
+      this.getAgents()
     }
   }
 </script>

@@ -17,7 +17,7 @@
       }
     },
     created() {
-      // this.loginCheck()
+      //this.loginCheck()
     }
   }
 </script>

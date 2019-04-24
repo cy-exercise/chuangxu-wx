@@ -1,30 +1,29 @@
 <template>
   <div class="step-block">
-    <div class="step">
+    <div class="step" :class="{step_status_doing: status==='doing', step_status_done: status !== 'doing'}">
       <div class="step-main step-border-green">
-        <div class="step-icon-wrapper step-gray">
-          <div class="step-icon-green"></div>
-          <!--<img src="/static/images/time.png" alt="">-->
+        <div class="step-icon-wrapper step_gray">
+          <div class="step_icon_green"></div>
         </div>
         <span class="step-title">发起提现申请</span>
       </div>
     </div>
-    <div class="step">
-      <div class="step-main step-border-gray">
-        <div class="step-icon-wrapper step-doing">
-          <div class="step-icon-img"></div>
-          <!--<img src="/static/images/time.png" alt="">-->
+    <div class="step" :class="{step_status_gray: status==='doing', step_status_done: status !== 'doing'}">
+      <div class="step-main">
+        <div class="step-icon-wrapper" :class="{step_doing: status === 'doing', step_gray: status !== 'doing'}">
+          <div :class="{step_icon_img: status === 'doing',step_icon_green: status !== 'doing'}">
+            <img src="/static/images/time.png" alt="" v-if="status === 'doing'">
+          </div>
         </div>
-        <span class="step-title">后台正在处理中</span>
+        <span class="step-title">{{status==='doing' ? '后台正在处理中' : '处理完成'}}</span>
       </div>
     </div>
     <div class="step-end">
       <div class="step-main-end">
-        <div class="step-icon-wrapper step-gray">
-          <div class="step-icon-gray"></div>
-          <!--<img src="/static/images/time.png" alt="">-->
+        <div class="step-icon-wrapper step_gray">
+          <div :class="{step_icon_gray: status === 'doing',step_icon_green: status !== 'doing'}"></div>
         </div>
-        <span class="step-title">每周星期五我们将统一发帐</span>
+        <span class="step-title">{{step_end_name}}</span>
       </div>
     </div>
   </div>
@@ -32,7 +31,22 @@
 
 <script>
   export default {
-    name: "Step"
+    name: "Step",
+    props: {
+      step_end_name: {
+        default: '每周星期五我们将统一发帐'
+      },
+      status: {
+        default: 'doing'
+      }
+    },
+    data() {
+      return {
+
+      }
+    },
+    created() {
+    }
   }
 </script>
 
@@ -52,23 +66,25 @@
     position: relative;
     height: 1.09rem;
   }
-  .step-border {
-    border-left: 1px;
-    border-left-color: #64AA62;
-  }
-  .step-border-green {
+  .step_status_doing .step-main{
     border-left: 1px;
     border-left-style: dashed;
     border-left-color: #64AA62;
   }
-  .step-border-gray {
+  .step_status_done .step-main {
+    border-left: 1px;
+    border-left-style: solid;
+    border-left-color: #64AA62;
+  }
+  .step_status_gray .step-main {
     border-left: 1px;
     border-left-style: solid;
     border-left-color: #B5B5B5;
   }
 
+  .step-border-green {
 
-
+  }
   .step-icon-wrapper {
     /*height: .4rem;*/
     /*opacity:1;*/
@@ -77,26 +93,36 @@
     top: -.05rem;
     /*background: #ffffff;*/
   }
-  .step-doing {
+  .step_doing {
     left: -.2rem;
   }
-  .step-gray{
+  .step_gray{
     left: -.1rem;
   }
-  .step-icon-img {
+  .step_icon_img {
+    /*height: .4rem;*/
+    /*width: .4rem;*/
+    /*background: url("/static/images/time.png");*/
+    /*background-repeat:no-repeat;*/
+    /*background-size:100% 100%;*/
+  }
+  .step_icon_img {
     height: .4rem;
     width: .4rem;
-    background: url("/static/images/time.png");
-    background-repeat:no-repeat;
-    background-size:100% 100%;
+    display: flex;
+    background: #ffffff;
   }
-  .step-icon-gray {
+  .step_icon_img img {
+    height: .4rem;
+    width: .4rem;
+  }
+  .step_icon_gray {
     height: .2rem;
     width: .2rem;
     border-radius: .1rem;
     background: #B5B5B5;
   }
-  .step-icon-green {
+  .step_icon_green {
     height: .2rem;
     width: .2rem;
     border-radius: .1rem;

@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div class="agent-not" v-if="show">
+    <div class="agent-not" v-if="!agent">
       <AgentNot></AgentNot>
     </div>
-    <div class="agent-info" v-if="!show">
+    <div class="agent-info" v-if="agent">
       <div class="phone-block">
         <div class="phone-text border-bottom">
           我的代理手机号码
         </div>
-        <div class="phone">13869704856
+        <div class="phone">{{agent.phone}}
         </div>
       </div>
       <div style="height: .2rem;"></div>
@@ -24,7 +24,8 @@
           </div>
         </div>
         <div class="code-content">
-          <img src="/static/images/qr-code.png" alt="">
+          <img src="/static/images/qr-code.png" alt="" v-if="agent.qrcode_uri1">
+          <div v-if="!agent.qrcode_uri1" style="font-size: .3rem;text-align: left;">申请中...</div>
         </div>
       </div>
     </div>
@@ -35,6 +36,9 @@
   import  AgentNot from "../common/AgentNot"
   export default {
     name: "AgentInfo",
+    props:{
+      agent: Object
+    },
     components: {
       AgentNot
     },
@@ -42,6 +46,11 @@
       return {
         show: false
       }
+    },
+    methods: {
+
+    },
+    mounted() {
     }
   }
 </script>

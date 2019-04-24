@@ -2,7 +2,7 @@
   <div class="apply-complete">
     <div class="apply-complete-head">代理申请</div>
     <div class="step-block border-bottom">
-      <StepWithdraw></StepWithdraw>
+      <StepWithdraw :step_end_name="step_name" :status="status"></StepWithdraw>
     </div>
     <div class="apply-foot">
       <div class="apply-title">代理申请</div>
@@ -20,6 +20,33 @@
     name: "ApplyComplete",
     components: {
       StepWithdraw
+    },
+    data() {
+      return {
+        agents: {},
+        status: 'doing',
+        step_name: '我们会在两小时内为您解决'
+      }
+    },
+    methods: {
+      getAgents() {
+        let user_id = localStorage.getItem('user_id')
+        let query = `?user_id=${user_id}&status=3`
+        this.$ajax.get('/api/v1/agent' + query).then(res => {
+          console.log(res.data.data.length)
+          if (res.data.data.length === 0) {
+            this.status = 'doing'
+          } else {
+            this.status = 'done'
+            this.step_name = '申请成功'
+          }
+        }).catch(error => {
+
+        })
+      }
+    },
+    created() {
+      this.getAgents()
     }
   }
 </script>

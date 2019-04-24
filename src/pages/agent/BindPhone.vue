@@ -8,12 +8,12 @@
           <img class="phone-icon" src="/static/images/phone.png" alt="">
           <span class="phone-prefix">+86</span>
         </div>
-        <input class="phone-input" type="number" placeholder="请输入手机号码" v-model="phone" maxlength="11">
+        <input class="phone-input" type="number" oninput="if(value.length>11)value=value.slice(0,11)" placeholder="请输入手机号码" v-model="phone">
       </div>
       <div class="code-block">
         <div class="code-block-main">
           <img class="code-icon" src="/static/images/code.png" alt="">
-          <input type="number" placeholder="请输入验证码" class="code-input" v-model="code" maxlength="6">
+          <input type="number" oninput="if(value.length>6)value=value.slice(0,6)" placeholder="请输入验证码" class="code-input" v-model="code">
         </div>
         <div class="code-button" >
           <span class="send-code" v-show="show" @click="getCode">获取验证码</span>
@@ -40,6 +40,7 @@
         show: true,
         second: 0,
         code: '',
+        valid_code: '',
         next_to: '/becomes'
       }
     },
@@ -53,6 +54,15 @@
           }).show()
           return false;
         }
+        const mobile_mode = /^1[34578]\d{9}$/;
+        if (!mobile_mode.test(this.phone)) {
+          this.$createDialog({
+            type: 'alert',
+            title: '手机号格式错误',
+            icon: 'cubeic-alert'
+          }).show()
+          return false;
+        }
         let data =  {
           phone: this.phone,
           type: this.type
@@ -60,7 +70,7 @@
         this.setTimeOut();
         this.$ajax.post('/api/v1/sms', data).then(res => {
           if (res.data.code === 200) {
-            alert('jkfds')
+            this.valid_code = res.data.data
           } else {
             this.$createDialog({
               type: 'alert',
@@ -69,12 +79,13 @@
             }).show()
           }
         })
-          .catch((res, data) => {
+          .catch((error) => {
             this.$createDialog({
               type: 'alert',
-              title: '发送失败',
+              title: error.response.data.message,
               icon: 'cubeic-alert'
             }).show()
+            clearInterval(this.timer);
           })
       },
       setTimeOut(){
@@ -94,9 +105,42 @@
         }
       },
       handleNext() {
+        // console.log(this.code);
+        // console.log(this.valid_code)
+        // if (this.code !== this.valid_code) {
+        //   this.$createDialog({
+        //     type: 'alert',
+        //     title: '验证码错误',
+        //     icon: 'cubeic-alert'
+        //   }).show()
+        //   return false;
+        // }
+        this.bindPhone();
         if (this.phone && this.code) {
-          this.$router.push(this.next_to)
+
         }
+      },
+      bindPhone() {
+        let user_id = JSON.parse(localStorage.getItem('user')).id;
+        alert(user_id);
+        this.$ajax.put(`/api/v1/user/${user_id}/phone`, {phone: this.phone, code: this.code}).then(res => {
+          if (res.data.code === 200) {
+            this.$createDialog({
+              type: 'alert',
+              title: res.data.message,
+              icon: 'cubeic-alert'
+            }).show()
+            setTimeout(() => {
+              this.$router.push(this.next_to + `?phone=${this.phone}`)
+            }, 3000)
+          }
+        }).catch(err=>{
+          this.$createDialog({
+            type: 'alert',
+            title: error.response.data.message,
+            icon: 'cubeic-alert'
+          }).show()
+        })
       }
     }
   }

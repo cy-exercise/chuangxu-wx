@@ -1,0 +1,7 @@
+export default {
+  STATUS_NEW: 0,
+  STATUS_APPROVAL: 1,
+  STATUS_REJECT: -1,
+  STATUS_PENDING: 2,
+  STATUS_REVIEWING:3
+}

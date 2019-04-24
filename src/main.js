@@ -17,6 +17,7 @@ axios.defaults.baseURL = 'http://nurse.chuangxu.com'
 // axios.defaults.baseURL = 'http://chuangxu.natapp4.cc'
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + VueCookies.get('access_token')
 
+
 Vue.prototype.$ajax= axios
 
 Vue.use(VueCookies)
