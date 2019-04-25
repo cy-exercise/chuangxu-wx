@@ -17,25 +17,22 @@
       getUserInfo(access_token) {
         let self = this;
         this.$ajax.post('/api/v1/user/info').then(res => {
-          //this.$cookies.set('user', res.data.data)
-          localStorage.setItem('user', JSON.stringify(res.data.data))
           this.$cookies.set('user_id', res.data.data.id);
-          this.$cookies.set('user', res.data.data);
+          localStorage.setItem('user', res.data.data);
           self.getAgents(res.data.data.id);
         })
       },
-      getAgents(user_id) {
-        let query = `?user_id=${user_id}&status=0`
-        this.$ajax.get('/api/v1/agent' + query).then(res => {
-          if (res.data.data) {
-            let agents  = res.data.data.map(function (agent) {
-              return {
-                id: agent.id,
-                brand_id: agent.brand_id
-              }
-            })
-            this.$cookies.set('agents', JSON.stringify(agents))
-            localStorage.setItem('agents', JSON.stringify(agents))
+      getAgents() {
+        this.$ajax.get('/api/v1/agent').then(res => {
+          if (res.data.data.data) {
+            // let agents  = res.data.data.data.map(function (agent) {
+            //   return {
+            //     id: agent.id,
+            //     brand_id: agent.brand_id,
+            //     phone: agent.phone
+            //   }
+            // })
+            localStorage.setItem('agents', JSON.stringify(res.data.data.data))
           }
         })
 

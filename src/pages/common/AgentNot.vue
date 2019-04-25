@@ -18,7 +18,6 @@
     },
     methods: {
       init() {
-        console.log(localStorage.getItem('agents'))
         if (localStorage.getItem('agents')) {
           this.to = "/becomes"
         }

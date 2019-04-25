@@ -8,7 +8,7 @@ import router from './router'
 import './assets/style/border.css'
 import axios from 'axios'
 import VueCookies from 'vue-cookies'
-import {Style, Upload, Toast, Dialog, Picker, Loading} from 'cube-ui'
+import {Style, Upload, Toast, Dialog, Picker, Loading, TabBar, TabPanels} from 'cube-ui'
 
 Vue.config.productionTip = false;
 
@@ -26,6 +26,8 @@ Vue.use(Toast)
 Vue.use(Dialog)
 Vue.use(Picker)
 Vue.use(Loading)
+Vue.use(TabBar)
+Vue.use(TabPanels)
 
 /* eslint-disable no-new */
 new Vue({

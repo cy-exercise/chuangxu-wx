@@ -2,14 +2,14 @@
   <div class="agent">
     <Header title="我的代理" to="/agent"></Header>
     <div class="head-nav border-bottom">
-      <router-link to="/agent_info?type=nurse">
+      <router-link to="/agent?type=nurse">
         <div class="nav-item" :class="{is_selected: 'nurse'=== type}" @click="handleSwitch('nurse')">
           <span class="item-content ">创序护考
             <span class="bottom-line"></span>
           </span>
         </div>
       </router-link>
-      <router-link to="/agent_info?type=medical">
+      <router-link to="/agent?type=medical">
         <div class="nav-item" :class="{is_selected: 'medical'=== type}" @click="handleSwitch('medical')">
 
           <span class="item-content ">创序医考
@@ -17,7 +17,7 @@
           </span>
         </div>
       </router-link>
-      <router-link to="/agent_info?type=bao">
+      <router-link to="/agent?type=bao">
         <div class="nav-item" :class="{is_selected: 'bao'=== type}" @click="handleSwitch('bao')">
 
           <span class="item-content ">创序医考宝
@@ -69,11 +69,10 @@
         let user_id = this.$cookies.get('user_id');
         let query = `?user_id=${user_id}&status=0`
         this.$ajax.get('/api/v1/agent' + query).then(res => {
-          console.log(res.data)
-          if (res.data.data.length > 0) {
-            let agents = res.data.data;
-            this.agents = res.data.data;
-            this.$cookies.set('agent', res.data.data)
+          if (res.data.data.data.length > 0) {
+            let agents = res.data.data.data;
+            this.agents = res.data.data.data;
+            localStorage.setItem('agents', JSON.stringify(agents))
             this.agent = agents.find(agent => {
               return agent.brand_id === this.brand_id
             })
@@ -92,7 +91,16 @@
     },
     mounted() {
       this.getAgents()
-    }
+    },
+    created() {
+      // this.init()
+    },
+    watch:{
+      $route(to,from){
+        // console.log(to.path);
+        // this.init()
+      }
+    },
   }
 </script>
 

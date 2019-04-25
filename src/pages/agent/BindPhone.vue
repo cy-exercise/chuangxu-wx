@@ -116,13 +116,9 @@
         //   return false;
         // }
         this.bindPhone();
-        if (this.phone && this.code) {
-
-        }
       },
       bindPhone() {
-        let user_id = JSON.parse(localStorage.getItem('user')).id;
-        alert(user_id);
+        let user_id = this.$cookies.get('user_id');
         this.$ajax.put(`/api/v1/user/${user_id}/phone`, {phone: this.phone, code: this.code}).then(res => {
           if (res.data.code === 200) {
             this.$createDialog({

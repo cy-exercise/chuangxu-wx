@@ -19,7 +19,6 @@ import Header from '../pages/common/Header'
 import Upload from '../pages/common/Upload'
 import Login from '../pages/agent/Login'
 
-
 Vue.use(Router)
 
 export default new Router({
@@ -65,7 +64,7 @@ export default new Router({
       component: ApplyComplete
     },
     {
-      path: '/agent_info',
+      path: '/agent',
       name: 'Agent',
       component: Agent
     },

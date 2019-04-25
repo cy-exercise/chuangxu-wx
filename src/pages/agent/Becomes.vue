@@ -5,12 +5,12 @@
       <div class="block">
         <div class="item-title border-bottom">选择您想代理的产品</div>
         <div class="item-box">
-          <div class="item">
+          <div class="item" v-if="nurse_checked">
             <label class="">
               <div class="item-check">
                 <span class="checkbox__input" :class="{'is-checked': nurse}">
                   <span class="checkbox__inner"></span>
-                  <input type="checkbox" class="checkbox__original" @click="handleCheck" v-model="nurse" value="nurse" :disabled="nurse_checked">
+                  <input type="checkbox" class="checkbox__original" @click="handleCheck" v-model="nurse" value="nurse">
                 </span>
               </div>
               <div class="item-content border-bottom">
@@ -21,7 +21,7 @@
               </div>
             </label>
           </div>
-          <div class="item">
+          <div class="item" v-if="medical_checked">
             <label class="">
               <div class="item-check">
                  <span class="checkbox__input" :class="{'is-checked': medical}">
@@ -35,7 +35,7 @@
               </div>
             </label>
           </div>
-          <div class="item">
+          <div class="item" v-if="bao_checked">
             <label class="">
               <div class="item-check">
                  <span class="checkbox__input" :class="{'is-checked': bao}">
@@ -56,7 +56,6 @@
       <div style="height: 1.34rem;"></div>
       <div class="button" :class="{next: nurse || medical || bao}" @click="handleNext">下一步</div>
     </div>
-
   </div>
 </template>
 
@@ -78,9 +77,12 @@
           'bao': '53b7715b-95cd-4d18-bc88-0f48dc5b4623',
           'medical': '23f2efa5-2cbe-4060-bbbb-79bc8a64481a'
         },
+        id_brand: {
+
+        },
         nurse_checked: true,
-        medical_checked: false,
-        bao_checked: false,
+        medical_checked: true,
+        bao_checked: true,
       }
     },
     methods: {
@@ -112,9 +114,21 @@
       },
       brandCheck() {
         // 判断之前是否已经选过
-        let agents = JSON.parse(this.$cookies.get('agents'))
+        console.log(localStorage.getItem('agents'))
+        let agents = JSON.parse(localStorage.getItem('agents'))
         console.log(agents)
-      }
+        agents.map(agent => {
+          if (this.brand_id_map.nurse === agent.brand_id){
+            this.nurse_checked = false
+          }
+          if (this.brand_id_map.bao === agent.brand_id){
+            this.bao_checked = false
+          }
+          if (this.brand_id_map.medical === agent.brand_id){
+            this.medical_checked = false
+          }
+        })
+      },
     },
     created() {
       this.brandCheck()

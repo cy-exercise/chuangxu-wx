@@ -146,13 +146,6 @@
     name: "Register",
     data() {
       return {
-        action: {
-          target: this.$ajax.defaults.baseURL + `/api/v1/config/sts/token`,
-          headers: {
-            Authorization: 'Bearer ' + this.$cookies.get('access_token')
-          },
-          checkSuccess: 'checkSuccess'
-        },
         files: [],
         files_back: [],
         files_hand: [],

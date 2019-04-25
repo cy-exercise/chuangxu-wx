@@ -16,7 +16,7 @@
         <div class="code-head border-bottom">
           <div class="code-text">
             <span class="code-title">我的代理码</span>
-            <span class="code-number">(优惠码746582)</span>
+            <!--<span class="code-number">(优惠码746582)</span>-->
           </div>
           <div class="code-share">
             分享
@@ -24,8 +24,8 @@
           </div>
         </div>
         <div class="code-content">
-          <img src="/static/images/qr-code.png" alt="" v-if="agent.qrcode_uri1">
-          <div v-if="!agent.qrcode_uri1" style="font-size: .3rem;text-align: left;">申请中...</div>
+          <img :src="agent.qrcode_uri1" alt="" v-if="agent.qrcode_uri1">
+          <div v-show="!agent.qrcode_uri1" class="appling" >申请中...</div>
         </div>
       </div>
     </div>
@@ -119,5 +119,12 @@
   .code-content {
     text-align: center;
     line-height: 6.45rem;
+  }
+  .appling {
+    display: flex;
+    width: 100%;
+    font-size: .32rem;
+    justify-content: center;
+    color: #515151;
   }
 </style>

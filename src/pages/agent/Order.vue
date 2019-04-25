@@ -1,5 +1,9 @@
 <template>
   <div class="order">
+    <div class="loading" v-show="loading">
+      <cube-loading></cube-loading>
+      <div class="description">加载中...</div>
+    </div>
     <Header title="我的业绩" to="/agent"></Header>
     <div class="nav border-bottom">
       <router-link to="">
@@ -12,47 +16,36 @@
         <div class="nav-item" :class="{is_selected: 'bao'=== type}" @click="handleSwitch('bao')">创序医考宝</div>
       </router-link>
     </div>
-    <div class="order-content">
+    <div class="order-content" @scroll="handleScroll">
       <div class="overview">
         <div class="overview-head">
-          <div class="current-name">全部</div>
+          <div class="current-name">{{channel_type}}</div>
           <div class="switch-block-button" v-show="!switch_show" @click="showSwitch">切换</div>
           <ul class="switch-block" v-show="switch_show">
-            <li class="all border-bottom">全部</li>
-            <li class="border-bottom" v-for="type in order_type" @click="switchType">{{type}}</li>
+            <li class="all border-bottom" @click="switchType('', '全部')">全部</li>
+            <li class="border-bottom" v-for="item in order_type" @click="switchType(item.id, item.title)">{{item.title}}</li>
           </ul>
         </div>
         <div class="order-count-wrapper">
-          <div class="order-count">123<span class="unit">单</span></div>
+          <div class="order-count">{{order_total}}<span class="unit">单</span></div>
           <div class="order-count-name">我的业绩</div>
         </div>
         <div class="overview-line" ref="orderline">
-
         </div>
       </div>
       <div style="height: .15rem;background: #F8F8F8;"></div>
       <div class="order-list">
         <div class="order-title border-bottom">下单详情</div>
-        <ul
-          class="order-block"
-
-        >
-          <!--<li class="order-item border-bottom" v-for="item in list" >-->
-          <!--<span class="user-name">{{item.user.name}}</span>-->
-          <!--<span class="order-name">{{item.order_details[0].product.title}}</span>-->
-          <!--<span class="price">￥{{item.price}}</span>-->
-          <!--<span class="order-date">{{item.created_at}}</span>-->
-          <!--</li>-->
-          <li class="order-item border-bottom" v-for="item in list_test" >
+        <ul class="order-block">
+          <li class="order-item border-bottom" v-for="item in list" >
             <div class="order-item-title">
-              <div class="order-name">{{item.order_name}}</div>
+              <div class="order-name">{{item.order_details.length ? item.order_details[0].product.title : '未知'}}</div>
               <div class="price">￥{{item.price}}</div>
             </div>
             <div class="order-item-username">
-              <div class="user-name">{{item.user_name}}</div>
-              <div class="order-date">{{item.date}}</div>
+              <div class="user-name">{{item.user.name}}</div>
+              <div class="order-date">{{item.created_at}}</div>
             </div>
-
           </li>
         </ul>
       </div>
@@ -75,6 +68,7 @@
       return {
         type: 'nurse',
         loading: false,
+        more: true,
         switch_show: false,
         order_type: ['医学','护理', '药学', '医技', '其他'],
         brand_id_map: {
@@ -84,7 +78,7 @@
         },
         brand_id: '5946661e-d8a2-49be-9202-b231ca907739',
         agents: {},
-        list: {},
+        list: [],
         list_test:[
           {
             user_name: '柳林东',
@@ -159,7 +153,11 @@
           }
         ],
         week: [],
-        orders_count: []
+        orders_count: [],
+        order_total: '',
+        current_page: '',
+        agent_id: '',
+        channel_type: '全部'
       }
     },
     methods: {
@@ -167,26 +165,24 @@
         this.type = type;
         this.brand_id = this.brand_id_map[type];
         let agent_id = this.getAgentId(this.brand_id);
-        console.log(agent_id);
+        if(!agent_id) {
+          this.order_total = '';
+          this.list = [];
+          return false;
+        }
         this.getOrders(agent_id);
         this.getOrdersWeek(agent_id);
       },
       showSwitch() {
         this.switch_show = true
       },
-      switchType() {
-        alert(1);
+      switchType(channel_id, title) {
+        this.channel_type = title;
+        let agent_id = this.getAgentId(this.brand_id);
+        this.getOrders(agent_id, 1, channel_id);
+        this.getOrdersWeek(agent_id, channel_id);
+        this.$forceUpdate();
         this.switch_show = false;
-      },
-      loadMore() {
-        this.loading = true;
-        setTimeout(() => {
-          let last = this.list[this.list.length - 1];
-          for (let i = 1; i <= 10; i++) {
-            this.list.push(last + i);
-          }
-          this.loading = false;
-        }, 2500);
       },
       drawLine(){
         let self = this
@@ -228,7 +224,7 @@
           },
           grid: {
             top: '20px',
-            left: '0',
+            left: '10px',
             // right: '0',
             bottom: '10px',
             containLabel: true
@@ -250,16 +246,35 @@
         };
         myChart.setOption(option);
       },
-      getOrders(agent_id) {
-        let query = `?status=0`;
+      getOrders(agent_id, page = 1, channel_id = '') {
+        let query = `?status=0&page=${page}&channel_id=${channel_id}`;
         this.$ajax.get(`/api/v1/agent/${agent_id}/order` + query).then(res => {
-          this.list = res.data.data.data
+
+          this.current_page = res.data.data.meta.current_page;
+
+          if (page > 1) {
+            this.list.push(...res.data.data.data);
+            this.loading = false;
+            if(page === res.data.data.meta.last_page){
+              this.more = false
+            }
+          } else {
+            this.list = res.data.data.data
+            this.order_total = res.data.data.meta.total
+            if(res.data.data.meta.last_page === 1) {
+              this.more = false
+            }
+          }
         }).catch(reason => {
           console.log(reason)
         })
       },
-      getOrdersWeek(agent_id) {
-        let query = `?status=0`;
+      getOrdersWeek(agent_id, channel_id = '') {
+        if (!agent_id) {
+          this.list = [];
+          return false;
+        }
+        let query = `?status=0&channel_id=${channel_id}`;
         this.$ajax.get(`/api/v1/agent/${agent_id}/order_week` + query).then(res => {
           this.week = res.data.data.dates;
           this.orders_count = res.data.data.orders_count
@@ -269,31 +284,50 @@
       },
       getAgents() {
         this.agents = JSON.parse(localStorage.getItem('agents'))
+        //console.log(this.agents)
       },
       getAgentId(brand_id = false) {
         if (!brand_id) {
           brand_id = this.brand_id
         }
-        brand_id = '13245646'
         let agent = this.agents.find(item => {
-           return item.brand_id == brand_id
+           return item.brand_id === brand_id
         });
-        console.log(agent)
-        return agent.id
+        if (agent) {
+          return agent.id
+        }
+      },
+      handleScroll(e) {
+        // console.log(1)
+        if((e.srcElement.scrollTop + e.srcElement.offsetHeight > e.srcElement.scrollHeight - 10)
+          && !this.loading && this.more) {
+          this.loadingMore()
+        }
+      },
+      loadingMore() {
+        this.loading = true;
+        this.getOrders(this.getAgentId(this.brand_id), this.current_page + 1)
+      },
+      getOrderType() {
+        this.$ajax.get('/api/v1/channel/simple').then(res => {
+          this.order_type = res.data.data
+        }).catch(error => {
+          console.log(error)
+        })
       }
     },
     mounted() {
-      //this.drawLine(this.week, this.orders_count);
-      // this.getOrders(this.getAgentId());
+      this.getOrders(this.getAgentId());
     },
     created() {
-      // this.getAgents();
-      // this.getOrdersWeek(this.getAgentId());
+      this.getAgents();
+      this.getOrdersWeek(this.getAgentId());
+      this.getOrderType();
     },
     watch: {
-      // week() {
-      //   this.drawLine()
-      // }
+      week() {
+        this.drawLine()
+      }
     }
   }
 </script>
@@ -456,13 +490,36 @@
     height: .75rem;
     line-height: .75rem;
     text-align: center;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap
   }
   .overview-line {
     height: 120px;
     margin-top: .6rem;
   }
   .order-content {
-    height: 11.3rem;
+    /*height: 11.3rem;*/
     overflow: scroll;
+    position: fixed;
+    top: 1.75rem;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .loading {
+    height: .5rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .28rem;
+  }
+  .description {
+    margin-left: .1rem;
+    color: #515151;
   }
 </style>
