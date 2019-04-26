@@ -4,7 +4,6 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
-// import './assets/style/reset.css'
 import './assets/style/border.css'
 import axios from 'axios'
 import VueCookies from 'vue-cookies'
@@ -16,7 +15,6 @@ Vue.config.productionTip = false;
 axios.defaults.baseURL = 'http://nurse.chuangxu.com'
 // axios.defaults.baseURL = 'http://chuangxu.natapp4.cc'
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + VueCookies.get('access_token')
-
 
 Vue.prototype.$ajax= axios
 

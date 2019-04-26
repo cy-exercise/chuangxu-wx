@@ -55,6 +55,6 @@
       top: 0
       left: 0
       padding: 0 15px
-      font-size .5rem
+      font-size .45rem
       color: #515151
 </style>

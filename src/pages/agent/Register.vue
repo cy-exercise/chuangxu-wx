@@ -5,15 +5,15 @@
       <div class="base-info">
         <div class="base-title">申请代理的账号（手机号码）</div>
         <div class="base-input">
-          <div class="input-name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</div>
+          <div class="input-name">姓名<span></span></div>
           <input type="text" placeholder="请输入真实姓名" v-model="name">
         </div>
         <div class="base-input">
-          <div class="input-name">地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 址</div>
+          <div class="input-name">地址<span></span></div>
           <input type="text" placeholder="请输入您的详细地址" v-model="address">
         </div>
         <div class="base-input">
-          <div class="input-name">身份证号</div>
+          <div class="input-name">身份证号<span></span></div>
           <input type="text" placeholder="请输入您的身份证号码" v-model="id_card">
         </div>
         <div class="base-input">
@@ -146,6 +146,7 @@
     name: "Register",
     data() {
       return {
+        action: '/upload',
         files: [],
         files_back: [],
         files_hand: [],
@@ -270,10 +271,9 @@
             bucket: 'chuangxu',
             stsToken: res.data.data.security_token
           })
-
+          let user_id = this.$cookies.get('user_id');
           var timestamp = (new Date()).getTime();
-          let name = 'upload/agent/' + timestamp + '.' + file.file.type.split("/")[1]
-          console.log(name)
+          let name = 'upload/agent/' + timestamp + user_id + '.' + file.file.type.split("/")[1]
           client.put(name, file.file).then(function (r1) {
             console.log('put success: %j', r1);
             return client.get(name);
@@ -394,17 +394,18 @@
     background: #F8F8F8;
     height: .76rem;
     line-height: .76rem;
-    border-radius: .1rem;
     margin-bottom: .2rem;
     font-size: .28rem;
     color: #B5B5B5;
-    display flex
+    border-radius: .1rem;
+    display flex;
   }
 
   .base-input input {
     background: #F8F8F8;
     flex 1
-    padding-left .1rem
+    padding-left .1rem;
+    border-radius: .1rem;
   }
 
   .input-name {
@@ -414,6 +415,14 @@
     width: 1.85rem;
     padding-left .18rem
     font-size: .28rem;
+    text-align justify;
+    padding-right: .4rem;
+    box-sizing border-box;
+  }
+  .input-name span {
+    display:inline-block;
+    /*padding-left: 100%;*/
+    width:100%;
   }
 
   .bank-card input {

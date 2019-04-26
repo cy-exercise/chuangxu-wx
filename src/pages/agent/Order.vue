@@ -39,7 +39,7 @@
         <ul class="order-block">
           <li class="order-item border-bottom" v-for="item in list" >
             <div class="order-item-title">
-              <div class="order-name">{{item.order_details.length ? item.order_details[0].product.title : '未知'}}</div>
+              <div class="order-name">{{item.channel ? item.channel.title: '未知'}}</div>
               <div class="price">￥{{item.price}}</div>
             </div>
             <div class="order-item-username">
@@ -166,8 +166,9 @@
         this.brand_id = this.brand_id_map[type];
         let agent_id = this.getAgentId(this.brand_id);
         if(!agent_id) {
-          this.order_total = '';
+          this.order_total = 0;
           this.list = [];
+          this.orders_count = [0, 0, 0, 0, 0, 0, 0];
           return false;
         }
         this.getOrders(agent_id);
@@ -325,7 +326,7 @@
       this.getOrderType();
     },
     watch: {
-      week() {
+      orders_count() {
         this.drawLine()
       }
     }

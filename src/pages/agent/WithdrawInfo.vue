@@ -7,11 +7,11 @@
     <div class="info-wrapper">
       <div class="total-money border-top">
         <div class="withdraw-title">提现金额</div>
-        <div class="withdraw-money">￥2500.00</div>
+        <div class="withdraw-money">￥{{total}}</div>
       </div>
       <div class="bank-account">
         <div class="withdraw-title">到银行账户</div>
-        <div class="withdraw-money">XX银行(567345345434****2345)</div>
+        <div class="withdraw-money">{{bank}}&nbsp;&nbsp;({{bank_card}})</div>
       </div>
     </div>
     <router-link to="/salary">
@@ -26,6 +26,24 @@
     name: "WithdrawInfo",
     components: {
       StepWithdraw
+    },
+    data() {
+      return {
+        total: '',
+        bank_card: '',
+        bank: ''
+      }
+    },
+    methods: {
+      init() {
+        let query = this.$route.query;
+        this.total = query.total;
+        this.bank_card = query.bank_card;
+        this.bank = query.bank;
+      }
+    },
+    created() {
+      this.init();
     }
   }
 </script>
@@ -38,7 +56,6 @@
     font-size: .36rem;
     font-weight: 500;
     text-align: center;
-    /*margin-top: .22rem;*/
     margin-bottom: 1.13rem;
   }
 
@@ -50,43 +67,10 @@
     height: 1.16rem;
   }
 
-  .circle {
-    width: .39rem;
-    height: .39rem;
-    float: left;
-    margin-right: .2rem;
-  }
-  .step-icon-img {
-    height: .4rem;
-    width: .4rem;
-    background: url("/static/images/time.png");
-    background-repeat:no-repeat;
-    background-size:100% 100%;
-  }
-  .step-icon-gray {
-    height: .2rem;
-    width: .2rem;
-    border-radius: .1rem;
-    background: #B5B5B5;
-  }
   .circle img {
     width: .39rem;
     height: .39rem;
 
-  }
-  .step-icon-green {
-    height: .2rem;
-    width: .2rem;
-    border-radius: .1rem;
-    background: #64AA62;
-  }
-
-  .line-border {
-    display: block;
-    height: .88rem;
-    margin-left: .18rem;
-    width: 100%;
-    border-left: .02rem dashed #64AA62;
   }
   .info-wrapper {
     padding-left: .32rem;
@@ -132,12 +116,5 @@
   .bank-account {
     position: relative;
     height: .88rem;
-  }
-  .step-title {
-    font-size: .28rem;
-    font-weight: 400;
-    color: #B5B5B5;
-    height: .4rem;
-    line-height: .4rem;
   }
 </style>

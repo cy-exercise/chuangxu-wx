@@ -33,6 +33,7 @@
 <script>
   import Header from '../common/Header'
   import AgentInfo from '../agent/AgentInfo'
+  import {getAgents} from '../../assets/js/api';
   export default {
     name: "Agent",
     components: {
@@ -68,7 +69,12 @@
       getAgents() {
         let user_id = this.$cookies.get('user_id');
         let query = `?user_id=${user_id}&status=0`
-        this.$ajax.get('/api/v1/agent' + query).then(res => {
+        let params = {
+            params: {
+              status: 0
+            }
+        }
+        this.$ajax.get('/api/v1/agent', params).then(res => {
           if (res.data.data.data.length > 0) {
             let agents = res.data.data.data;
             this.agents = res.data.data.data;

@@ -114,9 +114,7 @@
       },
       brandCheck() {
         // 判断之前是否已经选过
-        console.log(localStorage.getItem('agents'))
         let agents = JSON.parse(localStorage.getItem('agents'))
-        console.log(agents)
         agents.map(agent => {
           if (this.brand_id_map.nurse === agent.brand_id){
             this.nurse_checked = false

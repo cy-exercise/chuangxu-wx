@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper">
+
     <SelectItem v-show="showSelect" :is_show="showSelect" v-on:addSelectEvent="addSelect" v-on:handleCloseEvent = "handleColse"></SelectItem>
     <Header :title="title" to="/salary"></Header>
     <div class="container">
@@ -86,11 +87,17 @@
         // 先提交后台处理
         // 跳转
         if (true) {
-          this.$router.push('/withdraw_info')
+          this.$router.push({
+            path: '/withdraw_info',
+            query: {total: this.total, bank: this.card.name, bank_card: this.getFormatAccount()}
+          })
         }
       },
       handleAll() {
         this.total = this.salary
+      },
+      getFormatAccount() {
+        return this.card.account.substring(0, this.card.account.length-8) + '****' + this.card.account.substring(this.card.account.length - 4)
       }
     },
     mounted() {

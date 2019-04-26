@@ -130,7 +130,7 @@
               this.$router.push(this.next_to + `?phone=${this.phone}`)
             }, 3000)
           }
-        }).catch(err=>{
+        }).catch(error => {
           this.$createDialog({
             type: 'alert',
             title: error.response.data.message,

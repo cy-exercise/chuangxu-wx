@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-      <Header :title="title" to="/" is_white="true"></Header>
+      <Header :title="title" to="/salary" is_white="true"></Header>
       <div class="bill-wrapper">
         <div class="bill" @click="handleRoute('/bill')">账单</div>
       </div>

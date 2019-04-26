@@ -44,13 +44,19 @@
     data() {
       return {
         title: '账单',
-        empty_show: true
+        empty_show: false
       }
     },
     methods: {
       test() {
         alert(11)
+      },
+      getBill() {
+
       }
+    },
+    created() {
+
     }
   }
 </script>
