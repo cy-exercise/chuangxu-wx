@@ -4,28 +4,19 @@
       <Empty v-show="empty_show" info="暂无零钱提现记录" icon="/static/images/bill_icon.png"></Empty>
 
       <ul class="bill-list" v-show="!empty_show">
-        <li>
+        <li v-for="item of draws">
           <div class="bill-icon">
             <img src="/static/images/wallet@2x.png" alt="">
           </div>
           <div class="bill-content border-bottom">
             <div class="bill-detail">
-              <span class="bank-info">零钱提现-XX银行（尾号9076）</span>
-              <span class="bill-price">￥2500.00</span>
+              <span class="bank-info">零钱提现-{{item.bank}}(尾号{{item.bank_card.substring(item.bank_card.length - 4)}})</span>
+              <span class="bill-price">￥{{item.amount}}</span>
             </div>
-            <div class="bill-date">2019/3/27 09:31</div>
-          </div>
-        </li>
-        <li>
-          <div class="bill-icon">
-            <img src="/static/images/wallet@2x.png" alt="">
-          </div>
-          <div class="bill-content">
-            <div class="bill-detail">
-              <span class="bank-info">零钱提现-XX银行（尾号9076）</span>
-              <span class="bill-price">￥2500.00</span>
+            <div class="bill-date-wrapper">
+              <div class="bill-date">{{item.created_at}}</div>
+              <div class="bill-status">{{item.status==0 ? '' : '提现申请已提交'}}</div>
             </div>
-            <div class="bill-date">2019/3/27 09:31</div>
           </div>
         </li>
       </ul>
@@ -44,19 +35,24 @@
     data() {
       return {
         title: '账单',
-        empty_show: false
+        empty_show: false,
+        draws: []
       }
     },
     methods: {
       test() {
         alert(11)
       },
-      getBill() {
-
+      getDraws() {
+        this.$ajax.get('/api/v1/draw').then(res => {
+          if (res.data.code === 200) {
+            this.draws = res.data.data.data
+          }
+        })
       }
     },
     created() {
-
+      this.getDraws()
     }
   }
 </script>
@@ -120,6 +116,9 @@
     margin-top: .4rem;
     margin-bottom: .1rem;
   }
+  .bill-date-wrapper {
+    height: .33rem;
+  }
   .bill-date {
     height: .33rem;
     line-height: .33rem;
@@ -127,6 +126,15 @@
     font-size: .24rem;
     font-weight: 400;
     margin-top: .1rem;
+    float: left;
+  }
+  .bill-status {
+    margin-top: .1rem;
+    font-size: .2rem;
+    height: .33rem;
+    float: right;
+    line-height: .33rem;
+    color: #28A6FE;
   }
   .bill-detail {
     height: .4rem;

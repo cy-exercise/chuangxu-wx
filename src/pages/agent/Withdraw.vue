@@ -5,20 +5,20 @@
     <Header :title="title" to="/salary"></Header>
     <div class="container">
       <div class="withdraw-title border-bottom" @click="handleSelect">
-        <div class="withdraw-wx" v-show="!show_card">
-          <span class="input-title">提现到</span>
-          <div class="card-main">
-            <img class="card-icon" src="/static/images/logo-wx.png" alt="">
-            <span>微信</span>
-            <div class="description">一次性转账≤￥5000.00</div>
-          </div>
-          <img class="into-icon" src="/static/images/into_normal.png" alt="">
-        </div>
-        <div class="withdraw-card" v-show="show_card">
+        <!--<div class="withdraw-wx" v-show="!show_card">-->
+          <!--<span class="input-title">提现到</span>-->
+          <!--<div class="card-main">-->
+            <!--<img class="card-icon" src="/static/images/logo-wx.png" alt="">-->
+            <!--<span>微信</span>-->
+            <!--<div class="description">一次性转账≤￥5000.00</div>-->
+          <!--</div>-->
+          <!--<img class="into-icon" src="/static/images/into_normal.png" alt="">-->
+        <!--</div>-->
+        <div class="withdraw-card">
           <span class="input-title">提现到</span>
           <div class="card-main">
             <img class="card-icon" src="/static/images/bank_card.png" alt="">
-            <span>银行卡 ({{card.account}})</span>
+            <span>银行卡 ({{this.getFormatAccount()}})</span>
             <div class="description">一次性转账≤￥20000.00</div>
           </div>
           <img class="into-icon" src="/static/images/into_normal.png" alt="">
@@ -57,11 +57,13 @@
         title: '收益提现',
         show_card: false,
         card: {
-          name: '',
-          account: ''
+          name: '微信',
+          account: '',
+          agent_id: ''
         },
         total: '',
-        salary: '2500.00'
+        salary: 0,
+        agent_id : '',
       }
     },
     methods: {
@@ -69,8 +71,11 @@
         this.showSelect = true
       },
       addSelect(card) {
+        this.agent_id = card.agent_id;
+        console.log(card)
         if (card === 'wx') {
           this.show_card = false;
+          this.card.name = '微信'
         } else {
           this.show_card = true;
           this.card = card
@@ -85,23 +90,50 @@
           return false;
         }
         // 先提交后台处理
-        // 跳转
-        if (true) {
-          this.$router.push({
-            path: '/withdraw_info',
-            query: {total: this.total, bank: this.card.name, bank_card: this.getFormatAccount()}
-          })
+        let data = {
+          amount: this.total,
+          agent_id: this.card.agent_id,
         }
+        this.$ajax.post('/api/v1/draw', data).then(res => {
+          if (res.data.code === 200) {
+            alert('提交成功')
+            this.$router.push({
+              path: '/withdraw_info',
+              query: {total: this.total, bank: this.card.name, bank_card: this.getFormatAccount()}
+            })
+          }
+        }).catch(error => {
+
+        })
       },
       handleAll() {
         this.total = this.salary
       },
       getFormatAccount() {
-        return this.card.account.substring(0, this.card.account.length-8) + '****' + this.card.account.substring(this.card.account.length - 4)
+        //if (this.show_card)
+          return '(' + this.card.account.substring(0, this.card.account.length-8) + '****' + this.card.account.substring(this.card.account.length - 4) + ')'
+      },
+      init() {
+        if (this.$route.query.salary) {
+          this.salary = this.$route.query.salary
+        }
+
+        // 代理
+        const agents = JSON.parse(localStorage.getItem('agents'));
+        let agent = agents[0];
+        this.card.account = agent.bank_card
+        this.card.name = agent.bank
+        this.card.agent_id = agent.id
+      },
+      handleChange(e) {
+        console.log(e)
       }
     },
     mounted() {
       this.$refs.withdraw.focus()
+    },
+    created() {
+      this.init()
     }
   }
 </script>

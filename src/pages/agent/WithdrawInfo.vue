@@ -11,7 +11,7 @@
       </div>
       <div class="bank-account">
         <div class="withdraw-title">到银行账户</div>
-        <div class="withdraw-money">{{bank}}&nbsp;&nbsp;({{bank_card}})</div>
+        <div class="withdraw-money">{{bank}}&nbsp;&nbsp;{{bank_card}}</div>
       </div>
     </div>
     <router-link to="/salary">

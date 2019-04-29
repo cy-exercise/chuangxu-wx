@@ -11,13 +11,13 @@
               <div class="description">一次性转账≤￥20000.00</div>
             </div>
           </li>
-          <li class="border-bottom" @click="addSelect('wx')">
-            <img src="/static/images/logo-wx.png" alt="">
-            <div class="item">
-              <div class="item-title">微信</div>
-              <div class="description">一次性转账≤￥20000.00</div>
-            </div>
-          </li>
+          <!--<li class="border-bottom" @click="addSelect('wx')">-->
+            <!--<img src="/static/images/logo-wx.png" alt="">-->
+            <!--<div class="item">-->
+              <!--<div class="item-title">微信</div>-->
+              <!--<div class="description">一次性转账≤￥20000.00</div>-->
+            <!--</div>-->
+          <!--</li>-->
         </ul>
       </div>
     </div>
@@ -56,7 +56,8 @@
         let cards = agents.map(agent => {
           return {
             name: agent.bank,
-            account: agent.bank_card
+            account: agent.bank_card,
+            agent_id: agent.id
           }
         });
         let cards_new = [];

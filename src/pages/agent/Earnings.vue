@@ -5,12 +5,11 @@
         <div class="bill" @click="handleRoute('/bill')">账单</div>
       </div>
       <img class="wallet" src="/static/images/wallet@2x.png" alt="">
-      <div class="total">￥2500.00</div>
+      <div class="total">￥{{balance}}</div>
       <div class="total-title">我的收益</div>
       <div class="total-content">您可以随时发起提现，平台会在星期五为您转账</div>
-      <router-link to="/withdraw">
-        <div class="submit-button">提现</div>
-      </router-link>
+
+      <div class="submit-button" :class="{cannt: balance === 0}" @click="handleWithdraw">提现</div>
     </div>
 </template>
 
@@ -23,13 +22,37 @@
     },
     data() {
       return {
-        title: '我的工资'
+        title: '我的工资',
+        balance: 0
       }
     },
     methods: {
       handleRoute(url) {
         this.$router.push(url)
+      },
+      getUserBalance() {
+        let user_id = this.$cookies.get('user_id');
+        this.$ajax.get(`/api/v1/user/${user_id}/account`).then(res => {
+          if (res.data.data) {
+            this.balance = res.data.data.balance
+          }
+        }).catch(error => {
+          //console.log(error)
+        })
+      },
+      handleWithdraw() {
+        if (this.balance <= 0) {
+          return false
+        }
+
+        this.$router.push({
+          path: '/withdraw',
+          query: {salary: this.balance}
+        })
       }
+    },
+    created() {
+      this.getUserBalance();
     }
   }
 </script>
@@ -83,5 +106,8 @@
     margin-top: 1.68rem;
     margin-left: .72rem;
     font-size: .28rem;
+  }
+  .cannt {
+    background:rgba(40,178,254,0.5);
   }
 </style>

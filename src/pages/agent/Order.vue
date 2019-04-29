@@ -310,8 +310,8 @@
         this.getOrders(this.getAgentId(this.brand_id), this.current_page + 1)
       },
       getOrderType() {
-        this.$ajax.get('/api/v1/channel/simple').then(res => {
-          this.order_type = res.data.data
+        this.$ajax.get('/api/v1/channel' + '?size=100').then(res => {
+          this.order_type = res.data.data.data
         }).catch(error => {
           console.log(error)
         })
