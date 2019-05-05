@@ -12,7 +12,8 @@
         // 判断当前页页是否为登录页
         if (this.$route.path === '/agent/login') return;
         if (!this.$cookies.get('access_token')) {
-          window.location.href = 'https://chuangxu.natapp4.cc/m/auth/weixin/login'
+          // window.location.href = 'https://chuangxu.natapp4.cc/m/auth/weixin/login'
+          window.location.href = 'https://nurse.chuangxu.cn/m/auth/weixin/login'
         }
       }
     },

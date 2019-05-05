@@ -111,7 +111,7 @@
       },
       getFormatAccount() {
         //if (this.show_card)
-          return '(' + this.card.account.substring(0, this.card.account.length-8) + '****' + this.card.account.substring(this.card.account.length - 4) + ')'
+          return this.card.account.substring(0, this.card.account.length-8) + '****' + this.card.account.substring(this.card.account.length - 4)
       },
       init() {
         if (this.$route.query.salary) {

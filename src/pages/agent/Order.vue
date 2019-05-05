@@ -39,8 +39,8 @@
         <ul class="order-block">
           <li class="order-item border-bottom" v-for="item in list" >
             <div class="order-item-title">
-              <div class="order-name">{{item.channel ? item.channel.title: '未知'}}</div>
-              <div class="price">￥{{item.price}}</div>
+              <div class="order-name">{{item.product ? item.product.title: '未知'}}</div>
+              <div class="price">￥{{item.total_price}}</div>
             </div>
             <div class="order-item-username">
               <div class="user-name">{{item.user.name}}</div>

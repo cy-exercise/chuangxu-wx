@@ -25,7 +25,7 @@
         </div>
         <div class="code-content">
           <img :src="agent.qrcode_uri1" alt="" v-if="agent.qrcode_uri1">
-          <div v-show="!agent.qrcode_uri1" class="appling" >申请中...</div>
+          <div v-show="!agent.qrcode_uri1" class="appling">申请中...</div>
         </div>
       </div>
     </div>
@@ -33,11 +33,12 @@
 </template>
 
 <script>
-  import  AgentNot from "../common/AgentNot"
+  import AgentNot from "../common/AgentNot"
   import wx from "weixin-js-sdk"
+
   export default {
     name: "AgentInfo",
-    props:{
+    props: {
       agent: Object
     },
     components: {
@@ -49,100 +50,113 @@
         appId: '',
         timestamp: '',
         nonceStr: '',
-        signature: ''
+        signature: '',
+        wxjssdk: {},
+        shage: {
+          title: '护考',
+          img: ''
+        },
+        title: 'kwg哈',
+        img: '',
+        desc: '描述很长很长'
       }
     },
     methods: {
       handleShare() {
-        _this = this
+
+        if(!this.agent.qrcode_uri1) {
+          return false
+        }
+        let _this = this
         wx.config({
-          debug: false,
-          appId: this.appId, // 和获取Ticke的必须一样------必填，公众号的唯一标识
-          timestamp: this.timestamp, // 必填，生成签名的时间戳
-          nonceStr: this.nonceStr, // 必填，生成签名的随机串
-          signature: this.signature,// 必填，签名，见附录1
-          //需要分享的列表项:发送给朋友，分享到朋友圈，分享到QQ，分享到QQ空间
-          jsApiList: [
-            'onMenuShareAppMessage','onMenuShareTimeline',
-            'onMenuShareQQ','onMenuShareQZone'
-          ]
+          debug: true,
+          appId: this.wxjssdk.appId,
+          timestamp: this.wxjssdk.timestamp,
+          nonceStr: this.wxjssdk.nonceStr,
+          signature: this.wxjssdk.signature,
+          jsApiList: this.wxjssdk.jsApiList
         });
 
 
         //处理验证失败的信息
         wx.error(function (res) {
-          console.log('验证失败返回的信息:',res);
+          console.log('验证失败返回的信息:', res);
         });
-        //处理验证成功的信息
+
+        // 处理验证成功的信息
         wx.ready(function () {
-          //              alert(window.location.href.split('#')[0]);
           //分享到朋友圈
           wx.onMenuShareTimeline({
-            title: _this.newDetailObj.title, // 分享标题
-            link: window.location.href.split('#')[0], // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-            imgUrl: _this.newDetailObj.thu_image, // 分享图标
+            // title: _this.title, // 分享标题
+            link: _this.agent.qrcode_uri1,
+            // imgUrl: _this.img, // 分享图标
             success: function (res) {
               // 用户确认分享后执行的回调函数
-              logUtil.printLog("分享到朋友圈成功返回的信息为:",res);
-              _this.showMsg("分享成功!")
             },
             cancel: function (res) {
               // 用户取消分享后执行的回调函数
-              logUtil.printLog("取消分享到朋友圈返回的信息为:",res);
             }
           });
+
           //分享给朋友
           wx.onMenuShareAppMessage({
-            title: _this.newDetailObj.title, // 分享标题
-            desc: _this.desc, // 分享描述
-            link: window.location.href.split('#')[0], // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-            imgUrl: _this.newDetailObj.thu_image, // 分享图标
+            // title: _this.title, // 分享标题
+            // desc: _this.desc, // 分享描述
+            link: _this.agent.qrcode_uri1, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            // imgUrl: _this.img, // 分享图标
             type: '', // 分享类型,music、video或link，不填默认为link
             dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
             success: function (res) {
               // 用户确认分享后执行的回调函数
-              logUtil.printLog("分享给朋友成功返回的信息为:",res);
             },
             cancel: function (res) {
               // 用户取消分享后执行的回调函数
-              logUtil.printLog("取消分享给朋友返回的信息为:",res);
-            }
-          });
-          //分享到QQ
-          wx.onMenuShareQQ({
-            title: _this.newDetailObj.title, // 分享标题
-            desc: _this.desc, // 分享描述
-            link: window.location.href.split('#')[0], // 分享链接
-            imgUrl: _this.newDetailObj.thu_image, // 分享图标
-            success: function (res) {
-              // 用户确认分享后执行的回调函数
-              logUtil.printLog("分享到QQ好友成功返回的信息为:",res);
-            },
-            cancel: function (res) {
-              // 用户取消分享后执行的回调函数
-              logUtil.printLog("取消分享给QQ好友返回的信息为:",res);
             }
           });
 
+          //分享到QQ
+          // wx.onMenuShareQQ({
+          //   title: _this.title, // 分享标题
+          //   desc: _this.desc, // 分享描述
+          //   link: window.location.href.split('#')[0], // 分享链接
+          //   imgUrl: _this.thu_image, // 分享图标
+          //   success: function (res) {
+          //     // 用户确认分享后执行的回调函数
+          //     logUtil.printLog("分享到QQ好友成功返回的信息为:",res);
+          //   },
+          //   cancel: function (res) {
+          //     // 用户取消分享后执行的回调函数
+          //     logUtil.printLog("取消分享给QQ好友返回的信息为:",res);
+          //   }
+          // });
+
           //分享到QQ空间
-          wx.onMenuShareQZone({
-            title: _this.newDetailObj.title, // 分享标题
-            desc: _this.desc, // 分享描述
-            link: window.location.href.split('#')[0], // 分享链接
-            imgUrl: _this.newDetailObj.thu_image, // 分享图标
-            success: function (res) {
-              // 用户确认分享后执行的回调函数
-              logUtil.printLog("分享到QQ空间成功返回的信息为:",res);
-            },
-            cancel: function (res) {
-              // 用户取消分享后执行的回调函数
-              logUtil.printLog("取消分享到QQ空间返回的信息为:",res);
-            }
-          });
+          // wx.onMenuShareQZone({
+          //   title: _this.title, // 分享标题
+          //   desc: _this.desc, // 分享描述
+          //   link: window.location.href.split('#')[0], // 分享链接
+          //   imgUrl: _this.img, // 分享图标
+          //   success: function (res) {
+          //     // 用户确认分享后执行的回调函数
+          //     logUtil.printLog("分享到QQ空间成功返回的信息为:",res);
+          //   },
+          //   cancel: function (res) {
+          //     // 用户取消分享后执行的回调函数
+          //     logUtil.printLog("取消分享到QQ空间返回的信息为:",res);
+          //   }
+          // });
         });
+      },
+      getWxjssdk() {
+        this.$ajax.get('/api/v1/config/wx/jssdk?url=' + encodeURIComponent(window.location.href.split('#')[0])).then(res => {
+          console.log(res.data)
+          this.wxjssdk = res.data
+        })
       }
     },
     mounted() {
+      this.getWxjssdk()
+      console.log(window.location.href.split('#')[0])
     }
   }
 </script>
@@ -151,11 +165,13 @@
   .agent-info {
     margin-top: .2rem;
   }
+
   .phone-block {
     background: #ffffff;
     padding-left: .32rem;
     padding-right: .32rem;
   }
+
   .phone-text {
     /*height: .96rem;*/
     line-height: .96rem;
@@ -163,6 +179,7 @@
     font-weight: 500;
     color: #B5B5B5;
   }
+
   .phone {
     height: 1.13rem;
     line-height: 1.13rem;
@@ -170,6 +187,7 @@
     font-size: .28rem;
     font-weight: 400;
   }
+
   .code-block {
     margin-left: .34rem;
     margin-right: .34rem;
@@ -177,16 +195,19 @@
     background: #ffffff;
     border-radius: .1rem;
   }
+
   .code-head {
     font-size: 0;
     height: .96rem;
     padding-left: .4rem;
     padding-right: .4rem;
   }
+
   .code-text {
     float: left;
     line-height: .96rem;
   }
+
   .code-share {
     float: right;
     color: #448EF6;
@@ -194,24 +215,37 @@
     font-size: .28rem;
     font-weight: 400;
   }
+
   .code-title {
     font-size: .28rem;
     color: #515151;
     font-weight: 500;
   }
+
   .code-number {
     color: #B5B5B5;
     font-weight: 500;
     font-size: .24rem;
   }
+
   .code-share img {
     height: .44rem;
     width: .44rem;
   }
+
   .code-content {
-    text-align: center;
-    line-height: 6.45rem;
+    height: 6.45rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
   }
+  .code-content img {
+    height: 5.66rem;
+    width: 5.66rem;
+  }
+
   .appling {
     display: flex;
     width: 100%;
