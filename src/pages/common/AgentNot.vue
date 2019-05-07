@@ -1,7 +1,7 @@
 <template>
   <div class="agent-not">
     <img src="/static/images/agent-icon.png" alt="" class="icon">
-    <div class="title">你还不是创序医考的代理</div>
+    <div class="title">你还不是创序{{brand_name}}的代理</div>
     <router-link :to="to">
       <div class="button">申请代理</div>
     </router-link>
@@ -11,20 +11,38 @@
 <script>
   export default {
     name: "AgentNot",
+    props:{
+      brand: {
+        default: 'nurse'
+      }
+    },
     data() {
       return {
-        to: '/apply'
+        to: '/apply',
+        brand_name: '护考',
+        brand_map: {
+          'nurse': '护考',
+          'bao': '医考宝',
+          'medical': '医考',
+        }
       }
     },
     methods: {
       init() {
-        if (localStorage.getItem('agents')) {
+        let agents = JSON.parse(localStorage.getItem('agents'))
+        if (agents.length > 0) {
           this.to = "/becomes"
         }
+        this.brand_name = this.brand_map[this.brand]
       }
     },
     created() {
       this.init()
+    },
+    watch: {
+      brand() {
+        this.brand_name = this.brand_map[this.brand]
+      }
     }
   }
 </script>

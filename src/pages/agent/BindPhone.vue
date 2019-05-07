@@ -22,7 +22,7 @@
       </div>
     </div>
     <div style="height: .4rem"></div>
-    <div class="button" :class="{next: phone && code}" @click="handleNext">下一步</div>
+    <div class="button" :class="{next: phone && code}" @click="bindPhone">下一步</div>
   </div>
 </template>
 
@@ -86,6 +86,8 @@
               icon: 'cubeic-alert'
             }).show()
             clearInterval(this.timer);
+            this.show = true;
+            this.timer = null;
           })
       },
       setTimeOut(){
@@ -104,23 +106,13 @@
           }, 1000)
         }
       },
-      handleNext() {
-        // console.log(this.code);
-        // console.log(this.valid_code)
-        // if (this.code !== this.valid_code) {
-        //   this.$createDialog({
-        //     type: 'alert',
-        //     title: '验证码错误',
-        //     icon: 'cubeic-alert'
-        //   }).show()
-        //   return false;
-        // }
-        this.bindPhone();
-      },
       bindPhone() {
         let user_id = this.$cookies.get('user_id');
         this.$ajax.put(`/api/v1/user/${user_id}/phone`, {phone: this.phone, code: this.code}).then(res => {
           if (res.data.code === 200) {
+
+            this.updateUser(this.phone)
+
             this.$createDialog({
               type: 'alert',
               title: res.data.message,
@@ -136,7 +128,13 @@
             title: error.response.data.message,
             icon: 'cubeic-alert'
           }).show()
+          clearInterval(this.timer);
         })
+      },
+      updateUser(phone) {
+        const user = JSON.parse(localStorage.getItem('user'))
+        user.phone = phone
+        localStorage.setItem('user', JSON.stringify(user))
       }
     }
   }

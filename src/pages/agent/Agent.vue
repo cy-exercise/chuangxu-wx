@@ -26,7 +26,7 @@
         </div>
       </router-link>
     </div>
-    <AgentInfo :agent="agent"></AgentInfo>
+    <AgentInfo :agent="agent" :brand="type" v-show="show"></AgentInfo>
   </div>
 </template>
 
@@ -55,23 +55,28 @@
         },
         brand_id: '5946661e-d8a2-49be-9202-b231ca907739',
         agent: {},
-        agents: []
+        agents: [],
+        show: false
       }
     },
     methods: {
       handleSwitch(type) {
         this.type = type
         this.brand_id = this.brand_ids[type]
-        this.agent = this.agents.find(agent => {
+        let _agent = this.agents.find(agent => {
           return agent.brand_id === this.brand_id
         })
+        if (_agent) {
+          this.agent = _agent
+        } else {
+          this.agent = {}
+        }
       },
       getAgents() {
         let user_id = this.$cookies.get('user_id');
-        let query = `?user_id=${user_id}&status=0`
         let params = {
             params: {
-              status: 0
+              // status: 0
             }
         }
         this.$ajax.get('/api/v1/agent', params).then(res => {
@@ -90,15 +95,20 @@
           } else {
 
           }
+          this.show = true
         }).catch(error => {
 
         })
+
+        console.log(this.agent)
+        console.log(this.agents)
       }
     },
     mounted() {
-      this.getAgents()
+
     },
     created() {
+      this.getAgents()
       // this.init()
     },
     watch:{

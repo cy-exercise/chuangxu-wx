@@ -30,7 +30,7 @@
                 </span>
               </div>
               <div class="item-content border-bottom">
-                <div class="item-text">创序护考代理</div>
+                <div class="item-text">创序医考代理</div>
                 <div class="item-logo"></div>
               </div>
             </label>

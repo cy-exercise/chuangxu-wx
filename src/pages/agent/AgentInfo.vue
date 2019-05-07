@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="agent-not" v-if="!agent">
-      <AgentNot></AgentNot>
+    <div class="agent-not" v-if="!agent.id">
+      <AgentNot :brand="brand"></AgentNot>
     </div>
-    <div class="agent-info" v-if="agent">
+    <div class="agent-info" v-if="agent.id">
       <div class="phone-block">
         <div class="phone-text border-bottom">
           我的代理手机号码
@@ -25,7 +25,7 @@
         </div>
         <div class="code-content">
           <img :src="agent.qrcode_uri1" alt="" v-if="agent.qrcode_uri1">
-          <div v-show="!agent.qrcode_uri1" class="appling">申请中...</div>
+          <div v-show="!agent.qrcode_uri1" class="appling">审核中...</div>
         </div>
       </div>
     </div>
@@ -39,7 +39,8 @@
   export default {
     name: "AgentInfo",
     props: {
-      agent: Object
+      agent: Object,
+      brand: String
     },
     components: {
       AgentNot
@@ -63,7 +64,6 @@
     },
     methods: {
       handleShare() {
-
         if(!this.agent.qrcode_uri1) {
           return false
         }
@@ -149,14 +149,13 @@
       },
       getWxjssdk() {
         this.$ajax.get('/api/v1/config/wx/jssdk?url=' + encodeURIComponent(window.location.href.split('#')[0])).then(res => {
-          console.log(res.data)
           this.wxjssdk = res.data
         })
       }
     },
     mounted() {
       this.getWxjssdk()
-      console.log(window.location.href.split('#')[0])
+      // console.log(window.location.href.split('#')[0])
     }
   }
 </script>
@@ -214,6 +213,9 @@
     line-height: .96rem;
     font-size: .28rem;
     font-weight: 400;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .code-title {

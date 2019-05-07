@@ -1,5 +1,7 @@
 <template>
-    <div></div>
+    <div>
+      <div class="login">登录中...</div>
+    </div>
 </template>
 
 <script>
@@ -18,21 +20,15 @@
         let self = this;
         this.$ajax.post('/api/v1/user/info').then(res => {
           this.$cookies.set('user_id', res.data.data.id);
-          localStorage.setItem('user', res.data.data);
+          localStorage.setItem('user', JSON.stringify(res.data.data));
           self.getAgents(res.data.data.id);
         })
       },
       getAgents() {
         this.$ajax.get('/api/v1/agent').then(res => {
           if (res.data.data.data) {
-            // let agents  = res.data.data.data.map(function (agent) {
-            //   return {
-            //     id: agent.id,
-            //     brand_id: agent.brand_id,
-            //     phone: agent.phone
-            //   }
-            // })
             localStorage.setItem('agents', JSON.stringify(res.data.data.data))
+            this.$router.push('/agent')
           }
         })
 
@@ -45,5 +41,13 @@
 </script>
 
 <style scoped>
-
+  .login {
+    position: fixed;
+    bottom: 0;
+    top: .8rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: .36rem;
+  }
 </style>

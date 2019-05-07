@@ -310,13 +310,17 @@
           id_uri2: this.id_url2,
           face_uri: this.face_url
         }
-        this.$ajax.post('api/v1/agent', qs.stringify(data)).then(res => {
-          console.log(res.data)
+        this.$ajax.post('api/v1/agent/create/agents', qs.stringify(data)).then(res => {
+          let agent = res.data.data
           this.showSuccess()
-          this.$router.push('/apply_complete')
-          if (res.data.code === 200) {
-            this.showSuccess()
-          }
+          this.$router.push({
+            path: '/apply_complete',
+            query: {
+              agent_id: agent.id,
+              created_at: agent.created_at
+            }
+          })
+
         })
       },
       showSuccess() {
@@ -354,7 +358,12 @@
       },
       init() {
         this.brand_id = this.$route.query.brand_ids
-        this.phone = this.$route.query.phone
+        if (this.$route.query.phone) {
+          this.phone = this.$route.query.phone
+        } else {
+          const user = JSON.parse(localStorage.getItem('user'))
+          this.phone = user.phone
+        }
       }
     },
     mounted() {

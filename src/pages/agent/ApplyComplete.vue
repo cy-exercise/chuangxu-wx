@@ -46,7 +46,7 @@
       }
     },
     created() {
-      this.getAgents()
+      // this.getAgents()
     }
   }
 </script>

@@ -58,7 +58,6 @@
   var echarts = require('echarts/lib/echarts');
   require('echarts/lib/chart/line');
   require ('echarts/theme/macarons');
-  // import echarts from 'echarts'
   export default {
     name: "Order",
     components: {
@@ -67,7 +66,7 @@
     data() {
       return {
         type: 'nurse',
-        loading: false,
+        loading: true,
         more: true,
         switch_show: false,
         order_type: ['医学','护理', '药学', '医技', '其他'],
@@ -79,79 +78,6 @@
         brand_id: '5946661e-d8a2-49be-9202-b231ca907739',
         agents: {},
         list: [],
-        list_test:[
-          {
-            user_name: '柳林东',
-            order_name: '2019年中医执业医师(第一阶段)考试题库',
-            price: '2500',
-            date: '2019/02/01'
-          },{
-            user_name: '柳林东',
-            order_name: '2019年中医执业医师(第一阶段)考试题库',
-            price: '2500',
-            date: '2019/02/01'
-          },{
-            user_name: '柳林东',
-            order_name: '2019年中医执业医师(第一阶段)考试题库',
-            price: '2500',
-            date: '2019/02/01'
-          },{
-            user_name: '柳林东',
-            order_name: '2019年中医执业医师(第一阶段)考试题库',
-            price: '2500',
-            date: '2019/02/01'
-          },{
-            user_name: '柳林东',
-            order_name: '2019年中医执业医师(第一阶段)考试题库',
-            price: '2500',
-            date: '2019/02/01'
-          },{
-            user_name: '柳林东',
-            order_name: '2019年中医执业医师(第一阶段)考试题库',
-            price: '2500',
-            date: '2019/02/01'
-          },{
-            user_name: '柳林东',
-            order_name: '2019年中医执业医师(第一阶段)考试题库',
-            price: '2500',
-            date: '2019/02/01'
-          },{
-            user_name: '柳林东',
-            order_name: '2019年中医执业医师(第一阶段)考试题库',
-            price: '2500',
-            date: '2019/02/01'
-          },{
-            user_name: '柳林东',
-            order_name: '2019年中医执业医师(第一阶段)考试题库',
-            price: '2500',
-            date: '2019/02/01'
-          },{
-            user_name: '柳林东',
-            order_name: '2019年中医执业医师(第一阶段)考试题库',
-            price: '2500',
-            date: '2019/02/01'
-          },{
-            user_name: '柳林东',
-            order_name: '2019年中医执业医师(第一阶段)考试题库',
-            price: '2500',
-            date: '2019/02/01'
-          },{
-            user_name: '柳林东',
-            order_name: '2019年中医执业医师(第一阶段)考试题库',
-            price: '2500',
-            date: '2019/02/01'
-          },{
-            user_name: '柳林东',
-            order_name: '2019年中医执业医师(第一阶段)考试题库',
-            price: '2500',
-            date: '2019/02/01'
-          },{
-            user_name: '柳林东',
-            order_name: '2019年中医执业医师(第一阶段)考试题库',
-            price: '2500',
-            date: '2019/02/01'
-          }
-        ],
         week: [],
         orders_count: [],
         order_total: '',
@@ -166,18 +92,23 @@
         this.brand_id = this.brand_id_map[type];
         let agent_id = this.getAgentId(this.brand_id);
         if(!agent_id) {
-          this.order_total = 0;
-          this.list = [];
-          this.orders_count = [0, 0, 0, 0, 0, 0, 0];
+          this.resetOrder();
           return false;
         }
+        this.loading = true;
         this.getOrders(agent_id);
         this.getOrdersWeek(agent_id);
+      },
+      resetOrder(){
+        this.order_total = 0;
+        this.list = [];
+        this.orders_count = [0, 0, 0, 0, 0, 0, 0];
       },
       showSwitch() {
         this.switch_show = true
       },
       switchType(channel_id, title) {
+        this.loading = true;
         this.channel_type = title;
         let agent_id = this.getAgentId(this.brand_id);
         this.getOrders(agent_id, 1, channel_id);
@@ -252,20 +183,19 @@
         this.$ajax.get(`/api/v1/agent/${agent_id}/order` + query).then(res => {
 
           this.current_page = res.data.data.meta.current_page;
+          // 判断是否还能加载
+          if(page === res.data.data.meta.last_page || res.data.data.meta.last_page === 1){
+            this.more = false
+          }
+          // 总单数
+          this.order_total = res.data.data.meta.total
 
           if (page > 1) {
             this.list.push(...res.data.data.data);
-            this.loading = false;
-            if(page === res.data.data.meta.last_page){
-              this.more = false
-            }
           } else {
             this.list = res.data.data.data
-            this.order_total = res.data.data.meta.total
-            if(res.data.data.meta.last_page === 1) {
-              this.more = false
-            }
           }
+          this.loading = false
         }).catch(reason => {
           console.log(reason)
         })
@@ -297,6 +227,7 @@
         if (agent) {
           return agent.id
         }
+        return ''
       },
       handleScroll(e) {
         // console.log(1)
@@ -337,11 +268,13 @@
   .order {
     height: 100%;
     overflow: hidden;
+    background: #ffffff;
   }
   .nav {
     height: .95rem;
     line-height: .95rem;
     display: flex;
+    background: #ffffff;
   }
   .nav a {
     flex: 1;
