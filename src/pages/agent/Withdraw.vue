@@ -2,26 +2,28 @@
   <div class="wrapper">
 
     <SelectItem v-show="showSelect" :is_show="showSelect" v-on:addSelectEvent="addSelect" v-on:handleCloseEvent = "handleColse"></SelectItem>
-    <Header :title="title" to="/salary"></Header>
+    <!--<Header :title="title" to="/salary"></Header>-->
     <div class="container">
       <div class="withdraw-title border-bottom" @click="handleSelect">
         <!--<div class="withdraw-wx" v-show="!show_card">-->
           <!--<span class="input-title">提现到</span>-->
           <!--<div class="card-main">-->
-            <!--<img class="card-icon" src="/static/images/logo-wx.png" alt="">-->
+            <!--<img class="card-icon" src="@/assets/img/logo-wx.png" alt="">-->
             <!--<span>微信</span>-->
             <!--<div class="description">一次性转账≤￥5000.00</div>-->
           <!--</div>-->
-          <!--<img class="into-icon" src="/static/images/into_normal.png" alt="">-->
+          <!--<img class="into-icon" src="@/assets/img/into_normal.png" alt="">-->
         <!--</div>-->
         <div class="withdraw-card">
-          <span class="input-title">提现到</span>
+          <div class="input-title">提现到</div>
           <div class="card-main">
-            <img class="card-icon" src="/static/images/bank_card.png" alt="">
-            <span>银行卡 ({{this.getFormatAccount()}})</span>
-            <div class="description">一次性转账≤￥20000.00</div>
+            <img class="card-icon" src="@/assets/img/bank_card.png" alt="">
+            <div class="card-content">
+              <div>银行卡 ({{this.getFormatAccount()}})</div>
+              <div class="description">一次性转账≤￥20000.00</div>
+            </div>
           </div>
-          <img class="into-icon" src="/static/images/into_normal.png" alt="">
+          <img class="into-icon" src="@/assets/img/into_normal.png" alt="">
         </div>
       </div>
       <div class="withdraw-input border-bottom">
@@ -43,13 +45,13 @@
 </template>
 
 <script>
-  import Header from "../common/Header"
+  // import Header from "../common/Header"
   import SelectItem from '../common/SelectItem'
   export default {
     name: "Withdraw",
     components: {
       SelectItem,
-      Header
+      // Header
     },
     data() {
       return {
@@ -134,6 +136,16 @@
     },
     created() {
       this.init()
+    },
+    watch: {
+      total(val) {
+        if (val === '') {
+          return
+        }
+        if (val > Number(this.salary)) {
+          this.total = ''
+        }
+      }
     }
   }
 </script>
@@ -145,12 +157,9 @@
   }
   .container {
     width: 6.86rem;
-    /*height: 4.87rem;*/
     background: #ffffff;
     margin-left: .32rem;
     margin-top: .39rem;
-    /*padding-top: .26rem;*/
-    /*padding-bottom: .4rem;*/
     padding-left: .4rem;
     padding-right: .4rem;
     box-sizing: border-box;
@@ -173,17 +182,13 @@
     margin-left: .49rem;
   }
   .description {
-    position: absolute;
-    bottom: .3rem;
-    left: 1.53rem;
+    line-height: .28rem;
     color: #B5B5B5;
     font-size: .2rem;
     font-weight: 400;
+    margin-top: .1rem;
   }
   .into-icon {
-    position: absolute;
-    bottom: .46rem;
-    right: 0;
     height: .36rem;
     width: .36rem;
   }
@@ -195,10 +200,10 @@
   }
   .input-title {
     text-align: left;
-    margin-top: .1rem;
     color: #B5B5B5;
     font-weight: 500;
     font-size: .2rem;
+    float: left;
   }
   .imput-wrapper {
     position: absolute;
@@ -210,7 +215,6 @@
     font-size: .5rem;
     font-weight: 500;
     height: .7rem;
-    /*line-height: .7rem;*/
     width: .5rem;
     display: inline-flex;
     align-items: center;
@@ -235,7 +239,6 @@
     height: .76rem;
     line-height: .76rem;
     border-radius: .08rem;
-    /*margin-top: .2rem;*/
     text-align: center;
   }
   .submit .button {
@@ -262,7 +265,7 @@
     height: .34rem;
     width: .44rem;
     display: inline-block;
-    margin-left: .4rem;
+    /*margin-left: .4rem;*/
     margin-right: .1rem;
   }
   .withdraw-card, .withdraw-wx {
@@ -271,6 +274,7 @@
     height: 1.3rem;
     padding-top: .31rem;
     box-sizing: border-box;
+    justify-content: space-between;
   }
   .card-main {
     font-size: .28rem;

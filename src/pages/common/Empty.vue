@@ -1,7 +1,7 @@
 <template>
     <div class="empty">
       <div class="empty-wrapper">
-        <img :src="icon" alt="" class="empty-icon">
+        <img :src="icon.url" alt="" class="empty-icon">
       </div>
       <div class="empty-title">{{info}}</div>
     </div>
@@ -15,9 +15,15 @@
         default: '暂无消息'
       },
       icon: {
-        default: '/static/images/empty.png'
+        url: require('@/assets/img/empty.png')
       }
-    }
+    },
+    data() {
+      return {
+      }
+    },
+   mounted() {
+   }
   }
 </script>
 

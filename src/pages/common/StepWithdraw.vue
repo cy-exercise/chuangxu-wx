@@ -12,7 +12,7 @@
       <div class="step-main">
         <div class="step-icon-wrapper" :class="{step_doing: status === 'doing', step_gray: status !== 'doing'}">
           <div :class="{step_icon_img: status === 'doing',step_icon_green: status !== 'doing'}">
-            <img src="/static/images/time.png" alt="" v-if="status === 'doing'">
+            <img src="@/assets/img/time.png" alt="" v-if="status === 'doing'">
           </div>
         </div>
         <span class="step-title">{{status==='doing' ? '后台正在处理中' : '处理完成'}}</span>
@@ -102,30 +102,32 @@
   .step_icon_img {
     /*height: .4rem;*/
     /*width: .4rem;*/
-    /*background: url("/static/images/time.png");*/
+    /*background: url("@/assets/img/time.png");*/
     /*background-repeat:no-repeat;*/
     /*background-size:100% 100%;*/
   }
   .step_icon_img {
-    height: .4rem;
-    width: .4rem;
+    height: 20px;
+    width: 20px;
     display: flex;
     background: #ffffff;
   }
   .step_icon_img img {
-    height: .4rem;
-    width: .4rem;
+    height: 20px;
+    width: 20px;
+    border: none;
+    border-radius: 10px
   }
   .step_icon_gray {
-    height: .2rem;
-    width: .2rem;
-    border-radius: .1rem;
+    height: 10px;
+    width: 10px;
+    border-radius: 5px;
     background: #B5B5B5;
   }
   .step_icon_green {
-    height: .2rem;
-    width: .2rem;
-    border-radius: .1rem;
+    height: 10px;
+    width: 10px;
+    border-radius: 5px;
     background: #64AA62;
   }
   .step-icon img  {

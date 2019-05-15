@@ -1,6 +1,6 @@
 <template>
   <div class="becomes">
-    <Header title="申请成为代理" to="/bind_phone"></Header>
+    <!--<Header title="申请成为代理" to="/bind_phone"></Header>-->
     <div class="becomes-wrapper">
       <div class="block">
         <div class="item-title border-bottom">选择您想代理的产品</div>
@@ -16,7 +16,7 @@
               <div class="item-content border-bottom">
                 <div class="item-text">创序护考代理</div>
                 <div class="item-logo">
-                  <img src="/static/images/logo-nurse.png" alt="">
+                  <img src="@/assets/img/logo-nurse.png" alt="">
                 </div>
               </div>
             </label>
@@ -46,7 +46,7 @@
               <div class="item-content border-bottom">
                 <div class="item-text">创序医考宝代理</div>
                 <div class="item-logo">
-                  <img src="/static/images/logo-bao.png" alt="">
+                  <img src="@/assets/img/logo-bao.png" alt="">
                 </div>
               </div>
             </label>
@@ -60,11 +60,11 @@
 </template>
 
 <script>
-  import Header from '../common/Header'
+  // import Header from '../common/Header'
   export default {
     name: "Becomes",
     components: {
-      Header
+      // Header
     },
     data() {
       return {
@@ -83,6 +83,7 @@
         nurse_checked: true,
         medical_checked: true,
         bao_checked: true,
+        to: 'bind_phone'
       }
     },
     methods: {
@@ -115,6 +116,7 @@
       brandCheck() {
         // 判断之前是否已经选过
         let agents = JSON.parse(localStorage.getItem('agents'))
+        if (!agents) return false;
         agents.map(agent => {
           if (this.brand_id_map.nurse === agent.brand_id){
             this.nurse_checked = false

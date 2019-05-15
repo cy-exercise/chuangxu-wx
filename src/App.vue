@@ -11,10 +11,10 @@
       loginCheck() {
         // 判断当前页页是否为登录页
         if (this.$route.path === '/login') return;
+
         if (!this.$cookies.get('access_token')) {
-          // window.location.href = 'https://chuangxu.natapp4.cc/m/auth/weixin/login'
-          window.location.href = 'http://cy123.natapp1.cc/m/auth/weixin/login'
-          // window.location.href = 'https://nurse.chuangxu.cn/m/auth/weixin/login'
+          let path = this.$route.path
+          window.location.href = window.baseURL + '/m/auth/weixin/login' + `?target_url=${path}`
         }
       }
     },

@@ -1,18 +1,18 @@
 <template>
   <div class="wrapper">
     <div class="select-box">
-      <div class="title border-bottom"><img src="/static/images/x.png" alt="" @click="handleClose">选择提现到</div>
+      <div class="title border-bottom"><img src="@/assets/img/x.png" alt="" @click="handleClose">选择提现到</div>
       <div class="select-item">
         <ul>
           <li class="border-bottom" @click="addSelect(card)" v-for="(card, index) in cards">
-            <img src="/static/images/bank_card.png" alt="">
+            <img src="@/assets/img/bank_card.png" alt="">
             <div class="item">
               <div class="item-title">{{card.name}} ({{card.account}})</div>
               <div class="description">一次性转账≤￥20000.00</div>
             </div>
           </li>
           <!--<li class="border-bottom" @click="addSelect('wx')">-->
-            <!--<img src="/static/images/logo-wx.png" alt="">-->
+            <!--<img src="@/assets/img/logo-wx.png" alt="">-->
             <!--<div class="item">-->
               <!--<div class="item-title">微信</div>-->
               <!--<div class="description">一次性转账≤￥20000.00</div>-->

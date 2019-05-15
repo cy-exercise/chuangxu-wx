@@ -1,10 +1,10 @@
 <template>
     <div class="wrapper">
-      <Header :title="title" to="/salary" is_white="true"></Header>
+      <!--<Header :title="title" to="/salary" is_white="true"></Header>-->
       <div class="bill-wrapper">
         <div class="bill" @click="handleRoute('/bill')">账单</div>
       </div>
-      <img class="wallet" src="/static/images/wallet@2x.png" alt="">
+      <img class="wallet" src="@/assets/img/wallet@2x.png" alt="">
       <div class="total">￥{{balance}}</div>
       <div class="total-title">我的收益</div>
       <div class="total-content">您可以随时发起提现，平台会在星期五为您转账</div>
@@ -14,11 +14,11 @@
 </template>
 
 <script>
-  import Header from "../common/Header"
+  // import Header from "../common/Header"
   export default {
     name: "Earnings",
     components: {
-      Header
+      // Header
     },
     data() {
       return {

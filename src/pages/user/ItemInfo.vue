@@ -2,7 +2,7 @@
   <div class="wrapper">
     <Header title="项目详情" to="/user"></Header>
     <div class="order-item">
-      <img src="/static/images/logo.png" alt="" class="logo">
+      <img src="@/assets/img/logo.png" alt="" class="logo">
       <div class="order-title">论文润色</div>
       <div class="price">￥3409.00</div>
     </div>

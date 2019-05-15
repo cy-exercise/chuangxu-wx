@@ -15,7 +15,7 @@
           <div class="percent-item border-bottom">
             <div class="percent-number">{{percent.num}}</div>
             <div style="height: .96rem;line-height: .96rem; float: right;">
-              <img  class="selected-icon" src="/static/images/gou.png" alt="" v-show="percent.selected">
+              <img  class="selected-icon" src="@/assets/img/gou.png" alt="" v-show="percent.selected">
             </div>
           </div>
         </li>

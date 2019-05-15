@@ -1,12 +1,11 @@
 <template>
     <div class="wrapper">
-      <Header :title="title" to="/salary" ></Header>
-      <Empty v-show="empty_show" info="暂无零钱提现记录" icon="/static/images/bill_icon.png"></Empty>
+      <Empty v-show="empty_show" info="暂无零钱提现记录" :icon="empty_icon"></Empty>
 
       <ul class="bill-list" v-show="!empty_show">
         <li v-for="item of draws">
           <div class="bill-icon">
-            <img src="/static/images/wallet@2x.png" alt="">
+            <img src="@/assets/img/wallet@2x.png" alt="">
           </div>
           <div class="bill-content border-bottom">
             <div class="bill-detail">
@@ -24,29 +23,32 @@
 </template>
 
 <script>
-  import Header from "../common/Header"
+  // import Header from "../common/Header"
   import Empty from '../common/Empty'
   export default {
     name: "Bill",
     components: {
-      Header,
       Empty
     },
     data() {
       return {
         title: '账单',
         empty_show: false,
-        draws: []
+        draws: [],
+        empty_icon: {
+          url: require("@/assets/img/bill_icon.png")
+        }
       }
     },
     methods: {
-      test() {
-        alert(11)
-      },
       getDraws() {
         this.$ajax.get('/api/v1/draw').then(res => {
-          if (res.data.code === 200) {
+          let _this = this
+          if (res.data.code == 200) {
             this.draws = res.data.data.data
+            if (this.draws.length == 0) {
+              this.empty_show = true
+            }
           }
         })
       }

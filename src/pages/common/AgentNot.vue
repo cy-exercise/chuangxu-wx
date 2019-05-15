@@ -1,7 +1,7 @@
 <template>
   <div class="agent-not">
-    <img src="/static/images/agent-icon.png" alt="" class="icon">
-    <div class="title">你还不是创序{{brand_name}}的代理</div>
+    <img src="@/assets/img/agent-icon.png" alt="" class="icon">
+    <div class="title">您还不是创序{{brand_name}}的代理</div>
     <router-link :to="to">
       <div class="button">申请代理</div>
     </router-link>
@@ -30,9 +30,6 @@
     methods: {
       init() {
         let agents = JSON.parse(localStorage.getItem('agents'))
-        if (agents.length > 0) {
-          this.to = "/becomes"
-        }
         this.brand_name = this.brand_map[this.brand]
       }
     },

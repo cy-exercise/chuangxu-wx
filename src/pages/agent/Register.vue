@@ -1,6 +1,6 @@
 <template>
   <div class="register">
-    <Header title="填写基本信息" to="/becomes"></Header>
+    <!--<Header title="填写基本信息" to="/becomes"></Header>-->
     <div class="info-wrapper">
       <div class="base-info">
         <div class="base-title">申请代理的账号（手机号码）</div>
@@ -50,7 +50,7 @@
               </cube-upload-file>
               <cube-upload-btn :multiple="false">
                 <div>
-                  <img src="/static/images/identity-card-front.png" alt="">
+                  <img src="@/assets/img/identity-card-front.png" alt="">
                 </div>
               </cube-upload-btn>
             </div>
@@ -82,7 +82,7 @@
               </cube-upload-file>
               <cube-upload-btn :multiple="false">
                 <div>
-                  <img src="/static/images/identity-card-front.png" alt="">
+                  <img src="@/assets/img/identity-card-front.png" alt="">
                 </div>
               </cube-upload-btn>
             </div>
@@ -118,7 +118,7 @@
               </cube-upload-file>
               <cube-upload-btn :multiple="false">
                 <div>
-                  <img src="/static/images/hand-card.png" alt="">
+                  <img src="@/assets/img/hand-card.png" alt="">
                   <!--<cube-loading></cube-loading>-->
                 </div>
               </cube-upload-btn>
@@ -140,7 +140,7 @@
   import OSS from 'ali-oss'
 
   const qs = require('qs');
-  import Header from '../common/Header'
+  // import Header from '../common/Header'
 
   export default {
     name: "Register",
@@ -222,7 +222,7 @@
       }
     },
     components: {
-      Header
+      // Header
     },
     methods: {
       addedHandler(type) {
@@ -297,6 +297,27 @@
       handleSubmit() {
         if (!this.gitStatus()) {
           //return false;
+          if (!this.bank) {
+            alert('请选择银行')
+          }
+          if (!this.bank_card) {
+            alert('银行账户不能为空')
+          }
+          if (!this.address) {
+            alert('地址不能为空')
+          }
+          if (!this.id_card) {
+            alert('身份证号不能为空')
+          }
+          if (!this.id_url1) {
+            alert('姓名不能为空')
+          }
+          if (!this.id_url2) {
+            alert('身份证不能为空')
+          }
+          if (!this.face_url) {
+            alert('身份证不能为空')
+          }
         }
         let data = {
           name: this.name,
@@ -421,7 +442,7 @@
     display: inline-block;
     color: #515151;
     /*height: .4rem;*/
-    width: 1.85rem;
+    min-width: 1.85rem;
     padding-left .18rem
     font-size: .28rem;
     text-align justify;

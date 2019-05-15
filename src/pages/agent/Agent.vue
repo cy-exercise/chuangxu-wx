@@ -1,6 +1,6 @@
 <template>
   <div class="agent">
-    <Header title="我的代理" to="/agent"></Header>
+    <!--<Header title="我的代理" to="/agent"></Header>-->
     <div class="head-nav border-bottom">
       <router-link to="/agent?type=nurse">
         <div class="nav-item" :class="{is_selected: 'nurse'=== type}" @click="handleSwitch('nurse')">
@@ -31,13 +31,12 @@
 </template>
 
 <script>
-  import Header from '../common/Header'
+  // import Header from '../common/Header'
   import AgentInfo from '../agent/AgentInfo'
   import {getAgents} from '../../assets/js/api';
   export default {
     name: "Agent",
     components: {
-      Header,
       AgentInfo
     },
     data() {
@@ -74,24 +73,12 @@
       },
       getAgents() {
         let user_id = this.$cookies.get('user_id');
-        let params = {
-            params: {
-              // status: 0
-            }
-        }
-        this.$ajax.get('/api/v1/agent', params).then(res => {
+
+        this.$ajax.get('/api/v1/agent').then(res => {
           if (res.data.data.data.length > 0) {
-            let agents = res.data.data.data;
             this.agents = res.data.data.data;
-            localStorage.setItem('agents', JSON.stringify(agents))
-            this.agent = agents.find(agent => {
-              return agent.brand_id === this.brand_id
-            })
-            if (!this.agent) {
-              this.agent = agents[0]
-              this.brand_id = this.agent.brand_id
-              this.type = this.ids_brand[this.brand_id]
-            }
+            localStorage.setItem('agents', JSON.stringify(this.agents))
+            this.setAgent();
           } else {
 
           }
@@ -102,6 +89,20 @@
 
         console.log(this.agent)
         console.log(this.agents)
+      },
+      //
+      setAgent() {
+        let agent = this.agents.find(agent => {
+          return agent.brand_id === this.brand_id
+        })
+
+        if (agent) {
+          this.agent = agent
+        } else {
+          this.agent =this.agents[0]
+          this.brand_id = this.agent.brand_id
+          this.type = this.ids_brand[this.brand_id]
+        }
       }
     },
     mounted() {
@@ -148,15 +149,7 @@
     /*margin-bottom: 2px;*/
     text-align: center;
   }
-  /*.item-content:after{*/
-    /*content: "";*/
-    /*position: absolute;*/
-    /*display: inline-block;*/
-    /*width: 1rem;*/
-    /*bottom: 1;*/
-    /*height: 1px;*/
-    /*background: rebeccapurple;*/
-  /*}*/
+
   .nav-item.is_selected {
     color: #448EF6;
   }
@@ -173,6 +166,5 @@
     bottom: 0;
     height: 2px;
     background: #448EF6;
-    /*border-bottom: 2px solid #448EF6;*/
   }
 </style>

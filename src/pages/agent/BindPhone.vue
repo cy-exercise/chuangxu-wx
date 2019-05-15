@@ -1,18 +1,18 @@
 <template>
   <div class="bind">
-    <Header title="绑定手机号" to="/user"></Header>
+    <!--<Header title="绑定手机号" to="/apply"></Header>-->
     <div class="bind-wrapper">
       <div class="bind-title">申请代理的账号（手机号码）</div>
       <div class="input-block">
         <div class="phone-left">
-          <img class="phone-icon" src="/static/images/phone.png" alt="">
+          <img class="phone-icon" src="@/assets/img/phone.png" alt="">
           <span class="phone-prefix">+86</span>
         </div>
         <input class="phone-input" type="number" oninput="if(value.length>11)value=value.slice(0,11)" placeholder="请输入手机号码" v-model="phone">
       </div>
       <div class="code-block">
         <div class="code-block-main">
-          <img class="code-icon" src="/static/images/code.png" alt="">
+          <img class="code-icon" src="@/assets/img/code.png" alt="">
           <input type="number" oninput="if(value.length>6)value=value.slice(0,6)" placeholder="请输入验证码" class="code-input" v-model="code">
         </div>
         <div class="code-button" >
@@ -27,11 +27,11 @@
 </template>
 
 <script>
-  import Header from '../common/Header'
+  // import Header from '../common/Header'
   export default {
     name: "BindPhone",
     components: {
-      Header
+      // Header
     },
     data() {
       return {
@@ -120,7 +120,7 @@
             }).show()
             setTimeout(() => {
               this.$router.push(this.next_to + `?phone=${this.phone}`)
-            }, 3000)
+            }, 2000)
           }
         }).catch(error => {
           this.$createDialog({
@@ -128,7 +128,9 @@
             title: error.response.data.message,
             icon: 'cubeic-alert'
           }).show()
+          this.show = true;
           clearInterval(this.timer);
+          this.timer = null;
         })
       },
       updateUser(phone) {
@@ -184,11 +186,9 @@
   .phone-icon {
     width: .3rem;
     height: .44rem;
-    background: url("/static/images/phone.png");
     background-size: 100% 100%;
     display: inline-block;
     margin-right: .21rem;
-    /*margin-top: .16rem;*/
   }
   .phone-prefix {
     display: inline-block;

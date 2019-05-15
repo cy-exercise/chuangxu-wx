@@ -3,7 +3,7 @@
     <Header title="个人中心" to="/user"></Header>
     <div class="box" style="">
       <div class="people">
-        <img class="avatar" src="/static/images/avatar.png" alt="">
+        <img class="avatar" src="@/assets/img/avatar.png" alt="">
         <div class="nickname">
           微信昵称
         </div>
@@ -13,24 +13,24 @@
     <div class="item-box">
       <div class="item-wrapper">
         <div class="item" @click="handleRoute(2)">
-          <img class="item-img" src="/static/images/dollar@2x.png" alt="">
+          <img class="item-img" src="@/assets/img/dollar@2x.png" alt="">
           <div class="item-right border-bottom">
             <span>待付款的项目</span>
-            <img class="icon" src="/static/images/into_normal.png" alt="">
+            <img class="icon" src="@/assets/img/into_normal.png" alt="">
           </div>
         </div>
         <div class="item" @click="handleRoute(4)">
-          <img class="item-img" src="/static/images/doing.png" alt="">
+          <img class="item-img" src="@/assets/img/doing.png" alt="">
           <div class="item-right border-bottom">
             <span>进行中的项目</span>
-            <img class="icon" src="/static/images/into_normal.png" alt="">
+            <img class="icon" src="@/assets/img/into_normal.png" alt="">
           </div>
         </div>
         <div class="item" @click="handleRoute(5)">
-          <img class="item-img" src="/static/images/completed.png" alt="">
+          <img class="item-img" src="@/assets/img/completed.png" alt="">
           <div class="item-right border-bottom">
             <span>完成的项目</span>
-            <img class="icon" src="/static/images/into_normal.png" alt="">
+            <img class="icon" src="@/assets/img/into_normal.png" alt="">
           </div>
         </div>
       </div>

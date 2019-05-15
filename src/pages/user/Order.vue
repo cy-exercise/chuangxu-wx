@@ -12,7 +12,7 @@
           <div class="people">
             <span class="order-date">{{item.order.created_at}}</span>
             <span class="goto-price">{{action_name}}
-                <img src="/static/images/arrow_right.png" alt="">
+                <img src="@/assets/img/arrow_right.png" alt="">
               </span>
           </div>
         </li>

@@ -1,6 +1,6 @@
 <template>
   <div class="apply-complete">
-    <div class="apply-complete-head">代理申请</div>
+    <!--<div class="apply-complete-head">代理申请</div>-->
     <div class="step-block border-bottom">
       <StepWithdraw :step_end_name="step_name" :status="status"></StepWithdraw>
     </div>
@@ -52,6 +52,10 @@
 </script>
 
 <style scoped>
+  .apply-complete {
+    height: 100%;
+    background: #ffffff;
+  }
   .apply-complete-head {
     height: .8rem;
     line-height: .8rem;

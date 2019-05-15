@@ -18,10 +18,10 @@
             <span class="code-title">我的代理码</span>
             <!--<span class="code-number">(优惠码746582)</span>-->
           </div>
-          <div class="code-share" @click="handleShare">
-            分享
-            <img src="/static/images/share_normal.png" alt="">
-          </div>
+          <!--<div class="code-share" @click="handleShare">-->
+            <!--分享-->
+            <!--<img src="@/assets/img/share_normal.png" alt="">-->
+          <!--</div>-->
         </div>
         <div class="code-content">
           <img :src="agent.qrcode_uri1" alt="" v-if="agent.qrcode_uri1">
@@ -57,19 +57,17 @@
           title: '护考',
           img: ''
         },
-        title: 'kwg哈',
-        img: '',
-        desc: '描述很长很长'
+        title: '创序医考宝',
+        img: 'https://n-as.chuangxu.cn/bd/bao.png',
+        desc: '海量题库、考点推送、科学记忆、高效备考！扫码立享优惠，最高减50！！！',
+        link: 'https://bao.chuangxu.cn/download'
       }
     },
     methods: {
       handleShare() {
-        if(!this.agent.qrcode_uri1) {
-          return false
-        }
-        let _this = this
+
         wx.config({
-          debug: true,
+          debug: false,
           appId: this.wxjssdk.appId,
           timestamp: this.wxjssdk.timestamp,
           nonceStr: this.wxjssdk.nonceStr,
@@ -77,85 +75,47 @@
           jsApiList: this.wxjssdk.jsApiList
         });
 
-
         //处理验证失败的信息
         wx.error(function (res) {
           console.log('验证失败返回的信息:', res);
         });
-
+        let _this = this
         // 处理验证成功的信息
+        let share = {
+          title: _this.title, // 分享标题
+          desc: _this.desc, // 分享描述
+          link: _this.link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: _this.img, // 分享图标
+          success: function (res) {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel: function (res) {
+            // 用户取消分享后执行的回调函数
+          },
+          fail: function (res) {
+            //alert(JSON.stringify(res))
+          }
+        }
         wx.ready(function () {
-          //分享到朋友圈
-          wx.onMenuShareTimeline({
-            // title: _this.title, // 分享标题
-            link: _this.agent.qrcode_uri1,
-            // imgUrl: _this.img, // 分享图标
-            success: function (res) {
-              // 用户确认分享后执行的回调函数
-            },
-            cancel: function (res) {
-              // 用户取消分享后执行的回调函数
-            }
-          });
+          // 分享给朋友、qq好友
+          wx.updateAppMessageShareData(share)
+          // 朋友圈、qq空间
+          wx.updateTimelineShareData(share)
 
-          //分享给朋友
-          wx.onMenuShareAppMessage({
-            // title: _this.title, // 分享标题
-            // desc: _this.desc, // 分享描述
-            link: _this.agent.qrcode_uri1, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-            // imgUrl: _this.img, // 分享图标
-            type: '', // 分享类型,music、video或link，不填默认为link
-            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-            success: function (res) {
-              // 用户确认分享后执行的回调函数
-            },
-            cancel: function (res) {
-              // 用户取消分享后执行的回调函数
-            }
-          });
-
-          //分享到QQ
-          // wx.onMenuShareQQ({
-          //   title: _this.title, // 分享标题
-          //   desc: _this.desc, // 分享描述
-          //   link: window.location.href.split('#')[0], // 分享链接
-          //   imgUrl: _this.thu_image, // 分享图标
-          //   success: function (res) {
-          //     // 用户确认分享后执行的回调函数
-          //     logUtil.printLog("分享到QQ好友成功返回的信息为:",res);
-          //   },
-          //   cancel: function (res) {
-          //     // 用户取消分享后执行的回调函数
-          //     logUtil.printLog("取消分享给QQ好友返回的信息为:",res);
-          //   }
-          // });
-
-          //分享到QQ空间
-          // wx.onMenuShareQZone({
-          //   title: _this.title, // 分享标题
-          //   desc: _this.desc, // 分享描述
-          //   link: window.location.href.split('#')[0], // 分享链接
-          //   imgUrl: _this.img, // 分享图标
-          //   success: function (res) {
-          //     // 用户确认分享后执行的回调函数
-          //     logUtil.printLog("分享到QQ空间成功返回的信息为:",res);
-          //   },
-          //   cancel: function (res) {
-          //     // 用户取消分享后执行的回调函数
-          //     logUtil.printLog("取消分享到QQ空间返回的信息为:",res);
-          //   }
-          // });
         });
       },
       getWxjssdk() {
         this.$ajax.get('/api/v1/config/wx/jssdk?url=' + encodeURIComponent(window.location.href.split('#')[0])).then(res => {
           this.wxjssdk = res.data
+          this.handleShare()
         })
-      }
+      },
     },
     mounted() {
+
+    },
+    created() {
       this.getWxjssdk()
-      // console.log(window.location.href.split('#')[0])
     }
   }
 </script>

@@ -13,10 +13,9 @@
 
         this.$cookies.set('access_token', access_token);
         this.$ajax.defaults.headers.common['Authorization'] = 'Bearer ' + access_token
-        this.getUserInfo(access_token);
-        //this.$router.push('/salary')
+        this.getUserInfo();
       },
-      getUserInfo(access_token) {
+      getUserInfo() {
         let self = this;
         this.$ajax.post('/api/v1/user/info').then(res => {
           this.$cookies.set('user_id', res.data.data.id);
@@ -28,8 +27,9 @@
         this.$ajax.get('/api/v1/agent').then(res => {
           if (res.data.data.data) {
             localStorage.setItem('agents', JSON.stringify(res.data.data.data))
-            this.$router.push('/agent')
           }
+          let path = this.$route.query.target_url
+          this.$router.push(`${path}`)
         })
 
       }

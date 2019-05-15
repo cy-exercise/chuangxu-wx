@@ -2,7 +2,7 @@
   <div>
     <Header title="订单报价" to="/user"></Header>
     <div class="wrapper">
-      <img src="/static/images/order_complete.png" alt="">
+      <img src="@/assets/img/order_complete.png" alt="">
       <div class="complete-title">支付成功！</div>
       <p class="complete-content">点击个人中心“进行中的项目” <br>随时查看项目进度</p>
       <router-link to="/user">

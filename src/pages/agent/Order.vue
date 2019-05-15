@@ -4,13 +4,13 @@
       <cube-loading></cube-loading>
       <div class="description">加载中...</div>
     </div>
-    <Header title="我的业绩" to="/agent"></Header>
+    <!--<Header title="我的业绩" to="/agent"></Header>-->
     <div class="nav border-bottom">
       <router-link to="">
         <div class="nav-item" :class="{is_selected: 'nurse'=== type}" @click="handleSwitch('nurse')">创序护考</div>
       </router-link>
       <router-link to="">
-        <div class="nav-item" :class="{is_selected: 'medical'=== type}" @click="handleSwitch('medical')">创序医考</div>
+        <div class="nav-item" :class="{is_selected: 'medical'=== type}"  @click="handleSwitch('medical')">创序医考</div>
       </router-link>
       <router-link to="">
         <div class="nav-item" :class="{is_selected: 'bao'=== type}" @click="handleSwitch('bao')">创序医考宝</div>
@@ -44,7 +44,7 @@
             </div>
             <div class="order-item-username">
               <div class="user-name">{{item.user.name}}</div>
-              <div class="order-date">{{item.created_at}}</div>
+              <div class="order-date">{{item.created_at_format}}</div>
             </div>
           </li>
         </ul>
@@ -54,14 +54,14 @@
 </template>
 
 <script>
-  import Header from '../common/Header'
+  // import Header from '../common/Header'
   var echarts = require('echarts/lib/echarts');
   require('echarts/lib/chart/line');
   require ('echarts/theme/macarons');
   export default {
     name: "Order",
     components: {
-      Header
+      // Header
     },
     data() {
       return {
@@ -83,7 +83,8 @@
         order_total: '',
         current_page: '',
         agent_id: '',
-        channel_type: '全部'
+        channel_type: '全部',
+        status_payoff: 4
       }
     },
     methods: {
@@ -179,11 +180,13 @@
         myChart.setOption(option);
       },
       getOrders(agent_id, page = 1, channel_id = '') {
-        let query = `?status=0&page=${page}&channel_id=${channel_id}`;
+        let query = `?status=${this.status_payoff}&page=${page}&channel_id=${channel_id}`;
         this.$ajax.get(`/api/v1/agent/${agent_id}/order` + query).then(res => {
 
           this.current_page = res.data.data.meta.current_page;
           // 判断是否还能加载
+          this.more= true
+
           if(page === res.data.data.meta.last_page || res.data.data.meta.last_page === 1){
             this.more = false
           }
@@ -205,7 +208,7 @@
           this.list = [];
           return false;
         }
-        let query = `?status=0&channel_id=${channel_id}`;
+        let query = `?status=${this.status_payoff}&channel_id=${channel_id}`;
         this.$ajax.get(`/api/v1/agent/${agent_id}/order_week` + query).then(res => {
           this.week = res.data.data.dates;
           this.orders_count = res.data.data.orders_count
@@ -230,7 +233,6 @@
         return ''
       },
       handleScroll(e) {
-        // console.log(1)
         if((e.srcElement.scrollTop + e.srcElement.offsetHeight > e.srcElement.scrollHeight - 10)
           && !this.loading && this.more) {
           this.loadingMore()
@@ -289,7 +291,7 @@
   .nav-item.is_selected {
     color: #448EF6;
   }
-  .is_selected:after {
+  .is_selected:before {
     content: "";
     position: absolute;
     display: inline-block;
@@ -323,6 +325,10 @@
   .order-item {
     height: 1.36rem;
     padding-right: .32rem;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
   }
   .order-item-title,.order-item-username {
     overflow: hidden;
@@ -330,12 +336,12 @@
   .order-item-title {
     height: .4rem;
     line-height: .4rem;
-    margin-top: .2rem;
+    /*margin-top: .2rem;*/
   }
   .order-item-username {
     height: .33rem;
     line-height: .33rem;
-    margin-top: .21rem;
+    margin-top: .2rem;
   }
   .order-list {
 
