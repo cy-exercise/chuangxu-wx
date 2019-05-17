@@ -7,13 +7,13 @@
     <!--<Header title="我的业绩" to="/agent"></Header>-->
     <div class="nav border-bottom">
       <router-link to="">
+        <div class="nav-item" :class="{is_selected: 'bao'=== type}" @click="handleSwitch('bao')">创序医考宝</div>
+      </router-link>
+      <router-link to="">
         <div class="nav-item" :class="{is_selected: 'nurse'=== type}" @click="handleSwitch('nurse')">创序护考</div>
       </router-link>
       <router-link to="">
         <div class="nav-item" :class="{is_selected: 'medical'=== type}"  @click="handleSwitch('medical')">创序医考</div>
-      </router-link>
-      <router-link to="">
-        <div class="nav-item" :class="{is_selected: 'bao'=== type}" @click="handleSwitch('bao')">创序医考宝</div>
       </router-link>
     </div>
     <div class="order-content" @scroll="handleScroll">
@@ -40,7 +40,7 @@
           <li class="order-item border-bottom" v-for="item in list" >
             <div class="order-item-title">
               <div class="order-name">{{item.product ? item.product.title: '未知'}}</div>
-              <div class="price">￥{{item.total_price}}</div>
+              <div class="price">￥{{item.product.agent_profit}}</div>
             </div>
             <div class="order-item-username">
               <div class="user-name">{{item.user.name}}</div>
@@ -65,7 +65,7 @@
     },
     data() {
       return {
-        type: 'nurse',
+        type: 'bao',
         loading: true,
         more: true,
         switch_show: false,
@@ -75,7 +75,7 @@
           nurse: '5946661e-d8a2-49be-9202-b231ca907739',
           medical: '23f2efa5-2cbe-4060-bbbb-79bc8a64481a'
         },
-        brand_id: '5946661e-d8a2-49be-9202-b231ca907739',
+        brand_id: '53b7715b-95cd-4d18-bc88-0f48dc5b4623',
         agents: {},
         list: [],
         week: [],
@@ -274,19 +274,28 @@
   }
   .nav {
     height: .95rem;
-    line-height: .95rem;
+    /*line-height: .95rem;*/
     display: flex;
     background: #ffffff;
   }
   .nav a {
     flex: 1;
     text-align: center;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .nav-item {
     position: relative;
     font-size: .24rem;
     font-weight: 500;
     color: #B5B5B5;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
   }
   .nav-item.is_selected {
     color: #448EF6;
@@ -439,10 +448,9 @@
     margin-top: .6rem;
   }
   .order-content {
-    /*height: 11.3rem;*/
     overflow: scroll;
     position: fixed;
-    top: 1.75rem;
+    top: .95rem;
     bottom: 0;
     left: 0;
     right: 0;

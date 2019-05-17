@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrapper">
     <div class="title">收益提现</div>
      <div class="step-wrapper">
        <StepWithdraw></StepWithdraw>
@@ -49,6 +49,10 @@
 </script>
 
 <style scoped>
+  .wrapper {
+    height: 100%;
+    background: #ffffff;
+  }
   .title {
     height: .5rem;
     line-height: .5rem;

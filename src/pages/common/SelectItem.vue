@@ -30,16 +30,8 @@
     props: [],
     data() {
       return {
-        cards: [
-          {
-            name: 'xx银行',
-            account: '567345345434****2348'
-          },
-          {
-            name: 'xx银行',
-            account: '567345345434****2345'
-          }
-        ]
+        cards: [],
+        agents: []
       }
     },
     methods: {
@@ -50,13 +42,16 @@
         this.$emit('handleCloseEvent')
       },
       getCard() {
-        const agents = JSON.parse(localStorage.getItem('agents'));
+         this.agents = JSON.parse(localStorage.getItem('agents'));
+        if (!this.agents) {
+          this.getAgents()
+        }
 
         var temp = [];
-        let cards = agents.map(agent => {
+        let cards = this.agents.map(agent => {
           return {
             name: agent.bank,
-            account: agent.bank_card,
+            account: this.getAccount(agent.bank_card),
             agent_id: agent.id
           }
         });
@@ -68,6 +63,19 @@
           temp[cards[i].account] = true;
         }
         this.cards = cards_new;
+      },
+      getAccount(account) {
+        //if (this.show_card)
+        return account.substring(0, account.length-8) + '****' + account.substring(account.length - 4)
+      },
+      getAgents() {
+        this.$ajax.get('/api/v1/agent').then(res => {
+          if (res.data.data.data) {
+            this.agents = res.data.data.data
+            localStorage.setItem('agents', JSON.stringify(res.data.data.data))
+          }
+        })
+
       }
     },
     created() {

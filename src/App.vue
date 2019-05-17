@@ -11,8 +11,9 @@
       loginCheck() {
         // 判断当前页页是否为登录页
         if (this.$route.path === '/login') return;
-
-        if (!this.$cookies.get('access_token')) {
+        const agents = localStorage.getItem('agents')
+        const user = localStorage.getItem('user')
+        if (!this.$cookies.get('access_token') || !agents || !user) {
           let path = this.$route.path
           window.location.href = window.baseURL + '/m/auth/weixin/login' + `?target_url=${path}`
         }

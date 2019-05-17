@@ -15,6 +15,7 @@ const baseURL = 'https://bao.chuangxu.cn'
 // const baseURL = 'http://nurse.chuangxu.com'
 // const baseURL = 'http://cy123.natapp1.cc'
 window.baseURL = baseURL
+
 // 设置axios全局默认值
 axios.defaults.baseURL = baseURL
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + VueCookies.get('access_token')

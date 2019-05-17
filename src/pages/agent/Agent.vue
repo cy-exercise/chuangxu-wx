@@ -2,21 +2,21 @@
   <div class="agent">
     <!--<Header title="我的代理" to="/agent"></Header>-->
     <div class="head-nav border-bottom">
-      <router-link to="/agent?type=nurse">
-        <div class="nav-item" :class="{is_selected: 'nurse'=== type}" @click="handleSwitch('nurse')">
-          <span class="item-content ">创序护考
-            <span class="bottom-line"></span>
-          </span>
-        </div>
-      </router-link>
-      <router-link to="/agent?type=medical">
-        <div class="nav-item" :class="{is_selected: 'medical'=== type}" @click="handleSwitch('medical')">
+      <!--<router-link to="/agent?type=nurse">-->
+        <!--<div class="nav-item" :class="{is_selected: 'nurse'=== type}" @click="handleSwitch('nurse')">-->
+          <!--<span class="item-content ">创序护考-->
+            <!--<span class="bottom-line"></span>-->
+          <!--</span>-->
+        <!--</div>-->
+      <!--</router-link>-->
+      <!--<router-link to="/agent?type=medical">-->
+        <!--<div class="nav-item" :class="{is_selected: 'medical'=== type}" @click="handleSwitch('medical')">-->
 
-          <span class="item-content ">创序医考
-            <span class="bottom-line"></span>
-          </span>
-        </div>
-      </router-link>
+          <!--<span class="item-content ">创序医考-->
+            <!--<span class="bottom-line"></span>-->
+          <!--</span>-->
+        <!--</div>-->
+      <!--</router-link>-->
       <router-link to="/agent?type=bao">
         <div class="nav-item" :class="{is_selected: 'bao'=== type}" @click="handleSwitch('bao')">
 
@@ -41,7 +41,7 @@
     },
     data() {
       return {
-        type: 'nurse',
+        type: 'bao',
         brand_ids: {
           'nurse': '5946661e-d8a2-49be-9202-b231ca907739',
           'bao': '53b7715b-95cd-4d18-bc88-0f48dc5b4623',
@@ -52,7 +52,7 @@
           "53b7715b-95cd-4d18-bc88-0f48dc5b4623": 'bao',
           "23f2efa5-2cbe-4060-bbbb-79bc8a64481a": 'medical'
         },
-        brand_id: '5946661e-d8a2-49be-9202-b231ca907739',
+        brand_id: '53b7715b-95cd-4d18-bc88-0f48dc5b4623',
         agent: {},
         agents: [],
         show: false

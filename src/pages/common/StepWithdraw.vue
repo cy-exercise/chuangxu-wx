@@ -52,6 +52,8 @@
 
 <style scoped>
   .step-block {
+    height: 100%;
+    background: #ffffff;
   }
   .item-title {
     height: .42rem;

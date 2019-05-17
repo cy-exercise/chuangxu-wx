@@ -6,16 +6,16 @@
     <div class="agent-info" v-if="agent.id">
       <div class="phone-block">
         <div class="phone-text border-bottom">
-          我的代理手机号码
+          我的优惠码
         </div>
-        <div class="phone">{{agent.phone}}
+        <div class="phone">{{agent.serial}}
         </div>
       </div>
       <div style="height: .2rem;"></div>
       <div class="code-block">
         <div class="code-head border-bottom">
           <div class="code-text">
-            <span class="code-title">我的代理码</span>
+            <span class="code-title">我的优惠二维码</span>
             <!--<span class="code-number">(优惠码746582)</span>-->
           </div>
           <!--<div class="code-share" @click="handleShare">-->
@@ -81,7 +81,7 @@
         });
         let _this = this
         // 处理验证成功的信息
-        let share = {
+        let shareApp = {
           title: _this.title, // 分享标题
           desc: _this.desc, // 分享描述
           link: _this.link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
@@ -96,11 +96,25 @@
             //alert(JSON.stringify(res))
           }
         }
+        let shareTime = {
+          title: _this.title, // 分享标题
+          link: _this.link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: _this.img, // 分享图标
+          success: function (res) {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel: function (res) {
+            // 用户取消分享后执行的回调函数
+          },
+          fail: function (res) {
+            //alert(JSON.stringify(res))
+          }
+        }
         wx.ready(function () {
           // 分享给朋友、qq好友
-          wx.updateAppMessageShareData(share)
+          wx.updateAppMessageShareData(shareApp)
           // 朋友圈、qq空间
-          wx.updateTimelineShareData(share)
+          wx.updateTimelineShareData(shareTime)
 
         });
       },

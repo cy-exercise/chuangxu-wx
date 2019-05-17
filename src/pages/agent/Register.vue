@@ -33,6 +33,7 @@
             @files-added="addedHandler('front')"
             @file-error="errHandler"
             @file-submitted="submittedFrontHandler"
+            @file-success="handleSuccessFront"
           >
             <div class="clear-fix">
               <cube-upload-file v-for="(file, i) in files" :file="file" :key="i">
@@ -40,7 +41,7 @@
                   <div class="cube-upload-file-def"
                        :style="`background-image: url(${file.url});`">
                     <i class="cubeic-wrong"></i>
-                    <div class="cube-upload-file-state cube-upload-file_stat" v-show="show === 'front'">
+                    <div class="cube-upload-file-state cube-upload-file_stat upload-icon" v-show="show === 'front'">
                       <!--<i class="cube-upload-file-status cubeic-warn"></i> -->
                       <!--<span class="cube-upload-file-progress">100%</span>-->
                       <cube-loading></cube-loading>
@@ -65,6 +66,7 @@
             @files-added="addedHandler('back')"
             @file-error="errHandler"
             @file-submitted="submittedBackHandler"
+            @file-success="handleSuccessBack"
           >
             <div class="clear-fix">
               <cube-upload-file v-for="(file, i) in files_back" :file="file" :key="i">
@@ -72,7 +74,7 @@
                   <div class="cube-upload-file-def"
                        :style="`background-image: url(${file.url});`">
                     <i class="cubeic-wrong"></i>
-                    <div class="cube-upload-file-state cube-upload-file_stat" v-show="show === 'back'">
+                    <div class="cube-upload-file-state cube-upload-file_stat upload-icon" v-show="show === 'back'">
                       <!--<i class="cube-upload-file-status cubeic-warn"></i> -->
                       <!--<span class="cube-upload-file-progress">100%</span>-->
                       <cube-loading></cube-loading>
@@ -101,6 +103,7 @@
             @files-added="addedHandler('hand')"
             @file-error="errHandler"
             @file-submitted="submittedHandHandler"
+            @file-success="handleSuccessHand"
           >
             <div class="clear-fix">
               <cube-upload-file v-for="(file, i) in files_hand" :file="file" :key="i">
@@ -108,7 +111,7 @@
                   <div class="cube-upload-file-def"
                        :style="`background-image: url(${file.url});`">
                     <i class="cubeic-wrong"></i>
-                    <div class="cube-upload-file-state cube-upload-file_stat" v-show="show === 'hand'">
+                    <div class="cube-upload-file-state cube-upload-file_stat upload-icon" v-show="show === 'hand'">
                       <!--<i class="cube-upload-file-status cubeic-warn"></i> -->
                       <!--<span class="cube-upload-file-progress">100%</span>-->
                       <cube-loading></cube-loading>
@@ -128,7 +131,7 @@
       </div>
       <div style="height: .4rem;"></div>
       <div class="button" @click="handleSubmit"
-           :class="{can_submit:  gitStatus()}"
+           :class="{can_submit:  gitStatus()&& !isSubmit}"
       >提交
       </div>
       <div style="height: .4rem;"></div>
@@ -138,15 +141,17 @@
 
 <script>
   import OSS from 'ali-oss'
-
+  import util from '@/assets/js/util.js'
   const qs = require('qs');
-  // import Header from '../common/Header'
 
   export default {
     name: "Register",
     data() {
       return {
-        action: '/upload',
+        action: {
+          target: 'https://chuangxu-data.oss-cn-shanghai.aliyuncs.com',
+          data: {}
+        },
         files: [],
         files_back: [],
         files_hand: [],
@@ -218,7 +223,8 @@
           }
         ],
         show: '',
-        canSubmit: this.name
+        canSubmit: this.name,
+        isSubmit: false
       }
     },
     components: {
@@ -250,15 +256,18 @@
 
       submittedFrontHandler(file) {
         this.show = 'front'
-        this.upload(file, 'front')
+        // this.upload(file, 'front')
+        this.uploadInit(file, 'front')
       },
       submittedBackHandler(file) {
         this.show = 'back'
-        this.upload(file, 'back')
+        // this.upload(file, 'back')
+        this.uploadInit(file, 'back')
       },
       submittedHandHandler(file) {
         this.show = 'hand'
-        this.upload(file, 'hand')
+        // this.upload(file, 'hand')
+        this.uploadInit(file, 'hand')
       },
       upload(file, type) {
         let self = this;
@@ -268,9 +277,10 @@
             region: 'oss-cn-shanghai',
             accessKeyId: res.data.data.access_key_id,
             accessKeySecret: res.data.data.access_key_secret,
-            bucket: 'chuangxu',
+            bucket: 'chuangxu-data',
             stsToken: res.data.data.security_token
           })
+
           let user_id = this.$cookies.get('user_id');
           var timestamp = (new Date()).getTime();
           let name = 'upload/agent/' + timestamp + user_id + '.' + file.file.type.split("/")[1]
@@ -278,15 +288,15 @@
             console.log('put success: %j', r1);
             return client.get(name);
           }).then(function (r2) {
-            //console.log('get success: %j', r2);
+            console.log('get success: %j', r2);
             if (type === 'front') {
-              self.id_url1 = r2.res.requestUrls[0]
+              self.id_url1 = name
             }
             if (type === 'back') {
-              self.id_url2 = r2.res.requestUrls[0]
+              self.id_url2 = name
             }
             if (type === 'hand') {
-              self.face_url = r2.res.requestUrls[0]
+              self.face_url = name
             }
             self.show = ''
           }).catch(function (err) {
@@ -296,29 +306,44 @@
       },
       handleSubmit() {
         if (!this.gitStatus()) {
-          //return false;
           if (!this.bank) {
             alert('请选择银行')
+            return false;
           }
           if (!this.bank_card) {
             alert('银行账户不能为空')
+            return false;
           }
           if (!this.address) {
             alert('地址不能为空')
+            return false;
           }
           if (!this.id_card) {
             alert('身份证号不能为空')
+            return false;
           }
           if (!this.id_url1) {
             alert('姓名不能为空')
+            return false;
           }
           if (!this.id_url2) {
             alert('身份证不能为空')
+            return false;
           }
           if (!this.face_url) {
             alert('身份证不能为空')
+            return false;
+          }
+          if (!this.phone) {
+            alert('电话不能为空')
+            return false;
           }
         }
+        if (this.isSubmit) {
+          alert('重复提交')
+          return false;
+        }
+        this.isSubmit = true
         let data = {
           name: this.name,
           phone: this.phone,
@@ -342,6 +367,9 @@
             }
           })
 
+        }).catch(error => {
+          this.isSubmit = false
+          alert('注册失败')
         })
       },
       showSuccess() {
@@ -385,6 +413,50 @@
           const user = JSON.parse(localStorage.getItem('user'))
           this.phone = user.phone
         }
+      },
+      uploadInit(file, type) {
+        this.$ajax.post('/api/v1/token', {dir: 'upload/agent/'}).then(res => {
+          let token = res.data.data
+          const uploadData = {
+            key: token.dir + util.get_object_name(file.name),
+            policy: token.policy,
+            OSSAccessKeyId: token.access_id,
+            Signature: token.signature,
+            success_action_status: '200',
+            callback: token.callback
+          }
+          this.action.data = uploadData
+          if (type == 'front') {
+            this.$refs.uploadFront.start()
+          }
+          if (type == 'back') {
+            this.$refs.uploadBack.start()
+          }
+          if(type=='hand') {
+            this.$refs.uploadHand.start()
+          }
+
+        })
+      },
+      handleSuccess(file) {
+        let res = file.response
+        this.id_url1 = res.data.uri
+        this.show = false
+      },
+      handleSuccessBack(file) {
+        let res = file.response
+        this.id_url2 = res.data.uri
+        this.show = false
+      },
+      handleSuccessFront(file) {
+        let res = file.response
+        this.id_url1 = res.data.uri
+        this.show = false
+      },
+      handleSuccessHand(file) {
+        let res = file.response
+        this.face_url = res.data.uri
+        this.show = false
       }
     },
     mounted() {
@@ -537,6 +609,9 @@
 
   .card-back {
     float: right;
+  }
+  .upload-icon {
+    color: #ffffff;
   }
 
   .cube-upload

@@ -151,10 +151,10 @@
 </script>
 
 <style scoped>
-  .wrapper {
-    height: 100%;
-    background: #F8F8F8;
-  }
+  /*.wrapper {*/
+    /*height: 100%;*/
+    /*background: #F8F8F8;*/
+  /*}*/
   .container {
     width: 6.86rem;
     background: #ffffff;
