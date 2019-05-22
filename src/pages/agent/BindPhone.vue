@@ -22,7 +22,7 @@
       </div>
     </div>
     <div style="height: .4rem"></div>
-    <div class="button" :class="{next: phone && code}" @click="bindPhone">下一步</div>
+    <div class="button" :class="{next: phone && code && !submit}" @click="bindPhone">下一步</div>
   </div>
 </template>
 
@@ -41,7 +41,8 @@
         second: 0,
         code: '',
         valid_code: '',
-        next_to: '/becomes'
+        next_to: '/becomes',
+        submit: false
       }
     },
     methods: {
@@ -54,15 +55,15 @@
           }).show()
           return false;
         }
-        const mobile_mode = /^1[34578]\d{9}$/;
-        if (!mobile_mode.test(this.phone)) {
-          this.$createDialog({
-            type: 'alert',
-            title: '手机号格式错误',
-            icon: 'cubeic-alert'
-          }).show()
-          return false;
-        }
+        // const mobile_mode = /^1[34578]\d{9}$/;
+        // if (!mobile_mode.test(this.phone)) {
+        //   this.$createDialog({
+        //     type: 'alert',
+        //     title: '手机号格式错误',
+        //     icon: 'cubeic-alert'
+        //   }).show()
+        //   return false;
+        // }
         let data =  {
           phone: this.phone,
           type: this.type
@@ -107,6 +108,16 @@
         }
       },
       bindPhone() {
+        if (!this.phone || !this.code) {
+          alert('请输入手机号|验证码')
+          return false
+        }
+        if (this.submit) {
+          alert('请勿重复提交')
+          return false
+        }
+        this.submit = true
+
         let user_id = this.$cookies.get('user_id');
         this.$ajax.put(`/api/v1/user/${user_id}/phone`, {phone: this.phone, code: this.code}).then(res => {
           if (res.data.code === 200) {
@@ -131,6 +142,8 @@
           this.show = true;
           clearInterval(this.timer);
           this.timer = null;
+
+          this.submit = false
         })
       },
       updateUser(phone) {

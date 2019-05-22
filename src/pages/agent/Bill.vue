@@ -1,8 +1,11 @@
 <template>
     <div class="wrapper">
       <Empty v-show="empty_show" info="暂无零钱提现记录" :icon="empty_icon"></Empty>
-
-      <ul class="bill-list" v-show="!empty_show">
+      <div class="loading" v-show="loading">
+        <cube-loading></cube-loading>
+        <div class="description">加载中...</div>
+      </div>
+      <ul class="bill-list" v-show="!empty_show" @scroll="handleScroll">
         <li v-for="item of draws">
           <div class="bill-icon">
             <img src="@/assets/img/wallet@2x.png" alt="">
@@ -14,7 +17,7 @@
             </div>
             <div class="bill-date-wrapper">
               <div class="bill-date">{{item.created_at}}</div>
-              <div class="bill-status">{{item.status==0 ? '' : '提现申请已提交'}}</div>
+              <div class="bill-status">{{item.status == 0 ? '' : '提现申请已提交'}}</div>
             </div>
           </div>
         </li>
@@ -37,20 +40,47 @@
         draws: [],
         empty_icon: {
           url: require("@/assets/img/bill_icon.png")
-        }
+        },
+        current_page: 1,
+        loading: false,
+        more: true
       }
     },
     methods: {
-      getDraws() {
-        this.$ajax.get('/api/v1/draw').then(res => {
+      getDraws(page = 1) {
+        this.loading = true
+        let query = `?page=${page}&size=12`
+        this.$ajax.get('/api/v1/draw' + query).then(res => {
           let _this = this
           if (res.data.code == 200) {
-            this.draws = res.data.data.data
-            if (this.draws.length == 0) {
+
+            if (!res.data.data.data.length) {
               this.empty_show = true
             }
+
+            if(page === res.data.data.meta.last_page || res.data.data.meta.last_page === 1){
+              this.more = false
+            }
+
+            if (page > 1) {
+              this.draws.push(...res.data.data.data);
+            } else {
+              this.draws = res.data.data.data
+            }
+            this.loading = false
+            this.current_page = res.data.data.meta.current_page
           }
         })
+      },
+      handleScroll(e) {
+        console.log(e)
+        if((e.srcElement.scrollTop + e.srcElement.offsetHeight > e.srcElement.scrollHeight - 10)
+          && !this.loading && this.more) {
+          this.loadingMore()
+        }
+      },
+      loadingMore() {
+        this.getDraws(this.current_page + 1)
       }
     },
     created() {
@@ -74,6 +104,10 @@
   .icon-wrapper img {
     height: .44rem;
     width: .4rem;
+  }
+  .bill-list {
+    height: 100%;
+    overflow: auto;
   }
   .bill-list li {
     height: 1.2rem;
@@ -154,5 +188,20 @@
     font-weight: 500;
     color: #515151;
     float: left;
+  }
+  .loading {
+    height: .5rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .28rem;
+  }
+  .description {
+    margin-left: .1rem;
+    color: #515151;
   }
 </style>

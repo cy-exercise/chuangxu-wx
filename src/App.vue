@@ -15,7 +15,7 @@
         const user = localStorage.getItem('user')
         if (!this.$cookies.get('access_token') || !agents || !user) {
           let path = this.$route.path
-          window.location.href = window.baseURL + '/m/auth/weixin/login' + `?target_url=${path}`
+          window.location.href = window.baseURL + '/m/auth/weixin/login' + `?target_url=${path}` + `&source=` + window.source
         }
       }
     },

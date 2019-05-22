@@ -33,7 +33,7 @@
           <input type="number" placeholder="" ref="withdraw" v-model="total">
         </div>
       </div>
-      <div class="withdraw-submit" :class="{submit: total}">
+      <div class="withdraw-submit" :class="{submit: total && !submit}">
         <div class="submit-title">
           <span class="salary">工资余额￥{{salary}}，</span>
           <span class="all" @click="handleAll">全部提现</span>
@@ -66,6 +66,7 @@
         total: '',
         salary: 0,
         agent_id : '',
+        submit: false
       }
     },
     methods: {
@@ -89,9 +90,15 @@
       },
       handleSubmit() {
         if (!this.total) {
-          return false;
+          alert('输入金额')
+          return false
         }
-        // 先提交后台处理
+        if (this.submit) {
+          alert('请勿重复提交')
+          return false
+        }
+        this.submit = true
+
         let data = {
           amount: this.total,
           agent_id: this.card.agent_id,
@@ -105,7 +112,7 @@
             })
           }
         }).catch(error => {
-
+            this.submit = false
         })
       },
       handleAll() {
@@ -151,10 +158,6 @@
 </script>
 
 <style scoped>
-  /*.wrapper {*/
-    /*height: 100%;*/
-    /*background: #F8F8F8;*/
-  /*}*/
   .container {
     width: 6.86rem;
     background: #ffffff;

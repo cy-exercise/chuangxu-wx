@@ -218,7 +218,9 @@
       },
       getAgents() {
         this.agents = JSON.parse(localStorage.getItem('agents'))
-        //console.log(this.agents)
+        if (!this.agents) {
+          this.$router.push('/agent')
+        }
       },
       getAgentId(brand_id = false) {
         if (!brand_id) {

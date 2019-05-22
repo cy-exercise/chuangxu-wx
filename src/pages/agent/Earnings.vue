@@ -49,9 +49,16 @@
           path: '/withdraw',
           query: {salary: this.balance}
         })
+      },
+      checkAgent() {
+        let agents = JSON.parse(localStorage.getItem('agents'))
+        if (!agents) {
+          this.$router.push('/agent')
+        }
       }
     },
     created() {
+      this.checkAgent()
       this.getUserBalance();
     }
   }
